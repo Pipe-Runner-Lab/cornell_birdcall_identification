@@ -1,8 +1,25 @@
+# Important Threads
+1. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/159123 (Competition expectation by host)
+
 # Techniques
-1. https://www.kaggle.com/c/birdsong-recognition/discussion/158943 (Previous competition first prize)
+1. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/158943 (Previous competition first prize)
+2. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/160222 (FastAI training / 0.48 LB)
+3. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/158908 (Audio preprocessing techniques)
+4. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/159001 (Spectrogram conversion using Librosa)
+5. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/160454 (Cocktail party speaker seperation)
+6. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/161505 (Wavenet/Model suggestion)
+7. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/164230 (MFCC)
 
 # External Data
-1. https://www.kaggle.com/c/birdsong-recognition/discussion/160293 (Xeno-canto)
+1. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/160293 (Xeno-canto)
+2. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/159943 (Resampled and Reorganized train data)
 
 # Notebooks
-1. https://www.kaggle.com/c/birdsong-recognition/discussion/159993 (Deal with hidden data without submit button - Faster Audio file read)
+1. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/159993 (Deal with hidden data without submit button - Faster Audio file read)
+
+***
+
+# Prior work (Discussion Threads and Notebooks)
+1. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/158933
+2. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/161787 (Paper list)
+3. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/160759 (Free Sound challenge)
