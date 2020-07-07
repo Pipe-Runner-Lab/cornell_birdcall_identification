@@ -1,3 +1,5 @@
+# 1st Place
+
 Link: https://github.com/lRomul/argus-freesound
 
 ## Basic
@@ -63,3 +65,43 @@ Seven first-level models were chosen by enumeration of combinations of training 
  - n_mels = 128
  - n_fft = n_mels * 20
  - min_seconds = 0.5
+
+ *** 
+
+# 2nd Place 
+
+## Preprocessing:
+
+- Audio clips are trimmed of starting and ending silence
+- Random selection of 5 sec clip from audio clips
+
+## Model:
+
+- from time_frequency import Melspectrogram, AdditiveNoise
+
+- Melspectrogram Layer(Used to search the hyperparameter of log mel end2end)
+(Related to MFCC)
+- 9 layer CNN
+- Maxpooling and Averagepooling
+- pixels shuffle
+- label smoothing
+
+## Data Augmentation
+- Random selecting 5 sec clips and random padding
+
+## Ensemble
+- Stratified k-Fold
+
+
+## Training
+
+- batch_size=32,
+- n_folds=5,
+- lr=0.0005,
+- duration = 5,
+- rnn_unit = 128,
+- lm = 0.0,
+- momentum = 0.85,
+- mixup_prob = -1,
+
+- It uses a specrogram layer that outputs spectrograms in 2D image format
