@@ -9,6 +9,7 @@
 5. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/160454 (Cocktail party speaker seperation)
 6. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/161505 (Wavenet/Model suggestion)
 7. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/164230 (MFCC)
+8. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/161858 (Background noise as additional class)
 
 # External Data
 1. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/160293 (Xeno-canto)
