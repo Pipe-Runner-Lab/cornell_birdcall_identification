@@ -34,9 +34,31 @@
   - https://www.kaggle.com/c/birdsong-recognition/discussion/161860 ❓
 
 ## EDA
-1. [ ] https://www.kaggle.com/pavansanagapati/birds-sounds-eda-spotify-urban-sound-eda
-2. [ ] https://www.kaggle.com/andradaolteanu/birdcall-recognition-eda-and-audio-fe
-3. [ ] https://www.kaggle.com/hamditarek/audio-data-analysis-using-librosa/notebook#Librosa
+1. [x] https://www.kaggle.com/pavansanagapati/birds-sounds-eda-spotify-urban-sound-eda
+  - Max Sampling Rate of audio is 44100 Hx and 48000 Hz
+  - Maximum rating of train audio files between 3.5-5.0  
+
+2. [x] https://www.kaggle.com/andradaolteanu/birdcall-recognition-eda-and-audio-fe
+  - Majority of the data was registered between 2013 and 2019, during Spring and Summer months
+  - Pitch is usually unspecified. This is one of the more miscellaneous columns, that we need to be careful how we interpret. Most Song Types are call, song or flight.
+  - In most recordings the birds were seen, usually at an altitude between 0m and 10m.
+  - The majority of recordings are located in the US, followed by Canada and Mexico.
+  - train_audio: short recording (majority in mp3 format) of INDIVIDUAL birds.
+  - test_audio: recordings took in 3 locations:
+  - Site 1 and Site 2: recordings 10 mins long (mp3) that have labeled a bird every 5 seconds. This is meant to mimic the real life scenario, when you would usually have more than 1 bird (or no bird) singing.
+  - Site 3: recordings labeled at file level (because it is especially hard to have coders trained to label these kind of files)
+  - Maximum recordings in train have length <= 100sec
+
+3. [x] https://www.kaggle.com/hamditarek/audio-data-analysis-using-librosa/notebook#Librosa
+  - Discussion about librosa library: Librosa returns times series ndarray of audio with default sampling rate = 22KHz Mono
+  - Description about Spectrogram, spectral rolloff, MFCC     https://towardsdatascience.com/extract-features-of-music-75a3f9bc265d
+    - Audio is 3D signal with time, amplitude and frequency as axis
+    - Waveplot shows loudness of music in amplitude form (amp vs time)
+    - Spectrogram is visual representation of spectrum of frequencies as they vary with time
+    - Zero Crossing Rate is the rate of change of signal from +ve to -ve and vice versa
+    - Spectral Centroid shows the centre of mass for a sound based on frequency. It is calculated as the weighted mean of the frequencies  present in the signal, determined using a Fourier transform
+    - Spectral Rolloff is the frequency below which a specified percentage of the total spectral energy, e.g. 85%, lies. It also gives results for each frame.
+    - MFCC — Mel-Frequency Cepstral Coefficients are a small set of features (usually about 10–20) which concisely describe the overall shape of a spectral envelope.
 
 ***
 

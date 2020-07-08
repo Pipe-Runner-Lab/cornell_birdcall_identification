@@ -70,12 +70,12 @@ Seven first-level models were chosen by enumeration of combinations of training 
 
 # 2nd Place 
 
-## Preprocessing:
+#### Preprocessing:
 
 - Audio clips are trimmed of starting and ending silence
 - Random selection of 5 sec clip from audio clips
 
-## Model:
+#### Model:
 
 - from time_frequency import Melspectrogram, AdditiveNoise
 
@@ -86,14 +86,14 @@ Seven first-level models were chosen by enumeration of combinations of training 
 - pixels shuffle
 - label smoothing
 
-## Data Augmentation
+#### Data Augmentation
 - Random selecting 5 sec clips and random padding
 
-## Ensemble
+#### Ensemble
 - Stratified k-Fold
 
 
-## Training
+#### Training
 
 - batch_size=32,
 - n_folds=5,
@@ -105,3 +105,33 @@ Seven first-level models were chosen by enumeration of combinations of training 
 - mixup_prob = -1,
 
 - It uses a specrogram layer that outputs spectrograms in 2D image format
+
+***
+
+# 3nd Place 
+
+Link: https://github.com/ex4sperans/freesound-classification/tree/master
+
+#### MODEL:
+- Convolution based Models
+  - First one with 2d convolutions working on top of mel-scale spectrographs
+  - Second one with 1d convolutions on top of raw STFT representation (Batch Size- 256, Frame per second – 5ms)
+- 10-12 Convolution Layers (or 5-6 resnet blocks)
+- Small number of filters
+- Global Max Pooling or RNN and Max Pooling
+#### TRAINING:
+- Loss: LSEP (https://arxiv.org/abs/1704.03135), BCE loss
+- 8-12 seconds segments used
+- No TTA for inference, used full-length audio instead
+- Iterative pseudolabeling for noisy data trained on curated data
+
+#### DATA AUGMENTATION:
+- Modified MixUp (In contrast to the original approach, used OR rule for mixing labels)
+- audio effects such as reverb, pitch, tempo and overdrive (choose parameters by listening augmented samples)
+
+#### INFERENCE:
+- Grouped Samples with similar length (to avoid padding)
+
+#### ENSEMBLE:
+- Used 11 models trained with slightly different architectures (1d/2d cnn, rnn/no-rnn), slightly different subsets of the noisy set (see "noisy data" section) and slightly different hyperparameters.
+- RNN instead of MaxPooling then used to train differently (Ensemble both models afterwards)
