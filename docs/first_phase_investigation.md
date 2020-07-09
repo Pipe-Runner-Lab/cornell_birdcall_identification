@@ -19,7 +19,7 @@
 
 # External Data
 1. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/160293 (Xeno-canto)
-2. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/159943 (Resampled and Reorganized train data)
+2. [x] https://www.kaggle.com/c/birdsong-recognition/discussion/159943 (Resampled and Reorganized train data)
 
 # Notebooks
   
