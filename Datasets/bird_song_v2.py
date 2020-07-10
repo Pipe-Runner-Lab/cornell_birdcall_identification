@@ -1,12 +1,13 @@
 import torch
+import numpy as np
 import pandas as pd
 from skimage import io
-from os import path
-import numpy as np
+from pathlib import Path
 
 from torch.utils.data import Dataset
 
 from Datasets.utils import (fold_creator)
+from utils.submission_utils import BIRD_CODE
 
 NUMBER_OF_FOLDS = 5
 DATASET_NAME = 'bird_song_v2'
@@ -39,22 +40,27 @@ class Bird_Song_v2_Dataset(Dataset):
 
         if fold_number is None:
             # If fold not selected
-            self.csv_path = path.join(data_path, self.mode + ".csv")
-            self.image_dir = path.join(data_path, "images")
+            self.csv_path = Path(data_path) / self.mode + ".csv"
+            self.data_dir = Path(data_path) / self.mode
         else:
             # if fold selected
             self.create_folds()
-            self.csv_path = path.join(
-                "folds", DATASET_NAME, str(fold_number), self.mode + ".csv")
-            self.image_dir = path.join(
-                "folds", DATASET_NAME, str(fold_number), self.mode)
+            self.csv_path = Path("folds") / DATASET_NAME / \
+                str(fold_number) / self.mode + ".csv"
+            self.data_dir = Path("folds") / DATASET_NAME / \
+                str(fold_number) / self.mode
 
         self.data_frame = pd.read_csv(self.csv_path)
+
+        # create auxilary data directory if caching possible
+        if SHOULD_CACHE and self.transformer['audio'] is None:
+            self.aux_data_dir = Path(data_path) / "spectrograms"
+            self.aux_data_dir.mkdir(parents=True, exist_ok=True)
 
     def create_folds(self):
         fold_creator(
             self.data_path,
-            path.join("folds", DATASET_NAME),
+            Path("folds") / DATASET_NAME,
             NUMBER_OF_FOLDS
         )
 
@@ -68,20 +74,34 @@ class Bird_Song_v2_Dataset(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
+        # get basic data path
+        ebird_code = self.data_frame["ebird_code"][idx]
+        filename = self.data_frame["filename"][idx]
+        
+        # generate file path
+        audio_filepath = self.data_dir / ebird_code / filename
+
         # caching mechanism
-        if SHOULD_CACHE:
+        if SHOULD_CACHE and self.transformer['audio'] is None:
+            # check if png exists
+            # if yes, then use it
+            # else read audio + generate png it
+            pass
+        else:
+            # read audio
+            # generate intermediate png
+            # dont save it
             pass
 
         # image_name = str(self.data_frame.iloc[idx, 0]) + ".jpg"
-        image_name = str(self.data_frame.iloc[idx, 0])
-        image_path = path.join(self.image_dir, image_name)
-        image = io.imread(image_path)
+        # image_name = str(self.data_frame.iloc[idx, 0])
+        # image_path = path.join(self.data_dir, image_name)
+        # image = io.imread(image_path)
 
         if self.mode == "test":
             return self.transformer(image)
         else:
-            label = torch.tensor(
-                self.data_frame.iloc[idx, 1:].to_numpy(dtype=np.int64)
-            ).item()
+            # converting to one hotvector
+            label = np.zeros(len(BIRD_CODE), dtype="f")
+            label[BIRD_CODE[ebird_code]] = 1
             return self.transformer(image), label
-            

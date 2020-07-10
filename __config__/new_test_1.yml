@@ -1,0 +1,38 @@
+mode: PRD
+seed: 1024
+classes: 2
+
+pred:
+  batch: 20
+  workers: 2
+  ensemble: False
+
+pred_data:
+  name: jh_2020
+  params:
+    transformer: DFLT_2
+    resize: 110x110
+
+session_list:
+  - session:
+      path: new_dummy_2.yml
+      wt_path: loss_wt.pth
+      params:
+        batch: 40
+  - session:
+      path: new_dummy_1.yml
+      wt_path: loss_wt.pth
+      params:
+        transformer: ORG
+        resize: ORG
+        tta: 2
+        runs: 3
+  - session:
+      path: new_dummy_1.yml
+      wt_path: loss_wt.pth
+      params:
+        batch: 30
+        transformer: DFLT_1
+        resize: 330x330
+        tta: 4
+        runs: 2
