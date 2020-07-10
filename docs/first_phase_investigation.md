@@ -27,7 +27,7 @@
 1. [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/159993 (Deal with hidden data without submit button - Faster Audio file read)
 2. [ ] https://www.kaggle.com/hidehisaarai1213/inference-pytorch-birdcall-resnet-baseline (Inference Pipeline)
 3. [ ] https://www.kaggle.com/frlemarchand/bird-song-classification-using-an-lstm (LSTM for classificaiton)
-4. [ ] https://www.kaggle.com/ttahara/training-birdsong-baseline-resnest50-fast#Birdsong-Pytorch-Baseline:-ResNeSt50-fast-(Training) (Resnet50 training pytorch)
+4. [x] https://www.kaggle.com/ttahara/training-birdsong-baseline-resnest50-fast#Birdsong-Pytorch-Baseline:-ResNeSt50-fast-(Training) (Resnet50 training pytorch) ⭐️
 5. [ ] https://www.kaggle.com/ttahara/inference-birdsong-baseline-resnest50-fast (Resnet 50 infrence)
 6. [x] https://www.kaggle.com/c/birdsong-recognition/discussion/160222 (FastAI training / 0.48 LB)
   - https://github.com/earthspecies/birdcall ❓

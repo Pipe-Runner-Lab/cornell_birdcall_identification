@@ -3,7 +3,7 @@ from os import path
 from utils.paths import DATA_ROOT_DIR
 
 # list of datasets
-from Datasets.jh_2020_dataset import JH_2020_Dataset
+from Datasets.bird_song_v2 import Bird_Song_v2_Dataset
 
 
 def get(config=None, mode=None, transformer=None):
@@ -25,8 +25,8 @@ def get(config=None, mode=None, transformer=None):
     #                                Dataset list
     # ===========================================================================
 
-    if data_name == "jh_2020":
-        dataset = JH_2020_Dataset(
+    if data_name == "bird_song_v2":
+        dataset = Bird_Song_v2_Dataset(
             mode,
             data_path,
             transformer,

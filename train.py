@@ -103,7 +103,7 @@ def _train_single_ep(config, dataloader, model, optimiser, criterion, device, pr
             if (batch_ndx + 1) % config.train.grad_accum == 0:
                 # average accumulated gradient
                 loss /= config.train.grad_accum
-                
+
                 # update and flush
                 optimiser.step()
                 optimiser.zero_grad()
@@ -230,8 +230,14 @@ def run(config):
     device = get_training_device()
 
     transformers = {
-        "TRA": transformer_factory.get(config.train_data.params),
-        "VAL": transformer_factory.get(config.val_data.params)
+        "TRA": {
+            "image": transformer_factory.get(config.train_data.params),
+            "audio": None
+        },
+        "VAL": {
+            "image": transformer_factory.get(config.val_data.params),
+            "audio": None
+        }
     }
 
     datasets = {

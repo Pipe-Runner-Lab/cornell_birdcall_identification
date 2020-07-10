@@ -9,10 +9,18 @@ from torch.utils.data import Dataset
 from Datasets.utils import (fold_creator)
 
 NUMBER_OF_FOLDS = 5
-DATASET_NAME = 'jh_2020'
+DATASET_NAME = 'bird_song_v2'
+SHOULD_CACHE = True
 
 
-class JH_2020_Dataset(Dataset):
+class Bird_Song_v2_Dataset(Dataset):
+    """Read audio files and cache them if no audio transformer has been passed
+       else cache them as image files for use later
+
+    Args:
+        Dataset ([type]): [description]
+    """
+
     def __init__(self, mode, data_path, transformer=None, fold_number=None):
         if transformer is None:
             raise Exception("transformer missing!")
@@ -59,6 +67,10 @@ class JH_2020_Dataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
+
+        # caching mechanism
+        if SHOULD_CACHE:
+            pass
 
         # image_name = str(self.data_frame.iloc[idx, 0]) + ".jpg"
         image_name = str(self.data_frame.iloc[idx, 0])
