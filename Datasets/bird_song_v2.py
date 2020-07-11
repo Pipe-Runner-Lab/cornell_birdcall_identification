@@ -1,17 +1,21 @@
 import torch
 import numpy as np
 import pandas as pd
+import librosa
+import soundfile as sf
 from skimage import io
 from pathlib import Path
 
 from torch.utils.data import Dataset
 
-from Datasets.utils import (fold_creator)
+from Datasets.utils import (fold_creator, mono_to_color)
 from utils.submission_utils import BIRD_CODE
 
 NUMBER_OF_FOLDS = 5
 DATASET_NAME = 'bird_song_v2'
-SHOULD_CACHE = True
+SHOULD_CACHE = False
+PERIOD = 5
+MEL_PARAMS = {'n_mels': 128, 'fmin': 20, 'fmax': 16000}
 
 
 class Bird_Song_v2_Dataset(Dataset):
@@ -33,14 +37,16 @@ class Bird_Song_v2_Dataset(Dataset):
             self.mode = "train"
         elif mode == "VAL":
             self.mode = "val"
-        elif mode == "PRD":
-            self.mode = "test"
+        else:
+            raise Exception(
+                "{} not available for {}".format(mode, DATASET_NAME))
+        
         self.transformer = transformer
         self.data_path = data_path
 
         if fold_number is None:
             # If fold not selected
-            self.csv_path = Path(data_path) / self.mode + ".csv"
+            self.csv_path = Path(data_path) / (self.mode + ".csv")
             self.data_dir = Path(data_path) / self.mode
         else:
             # if fold selected
@@ -77,7 +83,7 @@ class Bird_Song_v2_Dataset(Dataset):
         # get basic data path
         ebird_code = self.data_frame["ebird_code"][idx]
         filename = self.data_frame["filename"][idx]
-        
+
         # generate file path
         audio_filepath = self.data_dir / ebird_code / filename
 
@@ -88,20 +94,28 @@ class Bird_Song_v2_Dataset(Dataset):
             # else read audio + generate png it
             pass
         else:
-            # read audio
-            # generate intermediate png
-            # dont save it
-            pass
+            y, sr = sf.read(audio_filepath)
 
-        # image_name = str(self.data_frame.iloc[idx, 0]) + ".jpg"
-        # image_name = str(self.data_frame.iloc[idx, 0])
-        # image_path = path.join(self.data_dir, image_name)
-        # image = io.imread(image_path)
+            length = y.shape[0]
+            effective_length = sr * 5
 
-        if self.mode == "test":
-            return self.transformer(image)
-        else:
-            # converting to one hotvector
-            label = np.zeros(len(BIRD_CODE), dtype="f")
-            label[BIRD_CODE[ebird_code]] = 1
-            return self.transformer(image), label
+            if length < effective_length:
+                new_y = np.zeros(effective_length, dtype=y.dtype)
+                start = np.random.randint(effective_length - length)
+                new_y[start:start + length] = y
+                y = new_y.astype(np.float32)
+            elif length > effective_length:
+                start = np.random.randint(length - effective_length)
+                y = y[start:start + effective_length].astype(np.float32)
+            else:
+                y = y.astype(np.float32)
+
+            melspec = librosa.feature.melspectrogram(y, sr=sr, **MEL_PARAMS)
+            melspec = librosa.power_to_db(melspec).astype(np.float32)
+
+            image = mono_to_color(melspec)
+
+        # converting to one hotvector
+        label = np.zeros(len(BIRD_CODE), dtype="f")
+        label[BIRD_CODE[ebird_code]] = 1
+        return self.transformer["image"](image), label

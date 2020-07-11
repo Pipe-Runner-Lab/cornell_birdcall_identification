@@ -4,6 +4,7 @@ from utils.paths import DATA_ROOT_DIR
 
 # list of datasets
 from Datasets.bird_song_v2 import Bird_Song_v2_Dataset
+from Datasets.bird_song_v2_test import Bird_Song_v2_Test_Dataset
 
 
 def get(config=None, mode=None, transformer=None):
@@ -32,6 +33,13 @@ def get(config=None, mode=None, transformer=None):
             transformer,
             fold
         )
+    elif data_name == "bird_song_v2_test":
+        dataset = Bird_Song_v2_Test_Dataset(
+            mode,
+            data_path,
+            transformer,
+            fold
+        )
     else:
         raise Exception("dataset not in list!")
 
@@ -40,8 +48,8 @@ def get(config=None, mode=None, transformer=None):
         mode,
         "raw" if fold is None else fold
     ))
-    print("↳ [ Transformer : {} ]".format(
-        str(transformer)
+    print("↳ [ Image Transformer : {} ]".format(
+        str(transformer["image"])
     ))
 
     return dataset

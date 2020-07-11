@@ -159,6 +159,7 @@ def get(config=None):
 
     print("[ Model : {} ]".format(name))
     print("↳ [ Prediction type : {} ]".format(pred_type))
+    print("↳ [ Adjusted classes : {} ]".format(adjusted_classes))
     if config.mode != "PRD":
         print("↳ [ Tuning type : {} ]".format(tune_type))
     return model

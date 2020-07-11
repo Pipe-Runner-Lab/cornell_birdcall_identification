@@ -115,13 +115,13 @@ class ExperimentHelper:
             val_target_list
         )
 
-        # generating aroc scores
-        result_dict["train/aroc"] = metric.aroc(
-            train_output_list, train_target_list)
-        result_dict["val/aroc"] = metric.aroc(
-            val_output_list, val_target_list)
+        # # generating aroc scores
+        # result_dict["train/aroc"] = metric.aroc(
+        #     train_output_list, train_target_list)
+        # result_dict["val/aroc"] = metric.aroc(
+        #     val_output_list, val_target_list)
 
-        # generate confusion matrix (validation only)
+        # # generate confusion matrix (validation only)
         # metric.confusion_matrix_generator(
         #     val_output_list,
         #     val_target_list,
