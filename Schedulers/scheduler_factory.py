@@ -19,7 +19,8 @@ def get(config=None, optimiser=None, iter_per_epoch=None):
     elif name == 'CosineAnnealing':
         scheduler = CosineAnnealingLR(
             optimiser,
-            T_max=epochs*iter_per_epoch
+            # T_max=epochs*iter_per_epoch
+            T_max = config.scheduler.params.T_max
         )
     elif name == 'CosineAnnealing-warmup':
         scheduler = get_cosine_schedule_with_warmup(

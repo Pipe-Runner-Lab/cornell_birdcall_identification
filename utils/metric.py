@@ -26,8 +26,12 @@ def onehot_converter(V, classes):
 
 
 def acc(output_list, target_list):
-    match = target_list.eq(post_process_output(output_list))
-    return 1.0 * torch.sum(match).item() / (output_list.size()[0] * output_list.size()[1])
+    output_list = post_process_output(output_list)
+    I = torch.logical_and(target_list, output_list)
+    U = torch.logical_or(target_list, output_list)
+    batch_iou = torch.sum(I, dim = 1,dtype=torch.float)/torch.sum(U, dim = 1)
+    acc = torch.sum(batch_iou) / len(batch_iou)
+    return acc.item()
 
 
 def f1(output_list, target_list):

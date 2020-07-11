@@ -6,9 +6,9 @@ from utils.paths import CONFIG_DIR
 
 
 def wandb_init(config):
-    cprint("[ Logging started on W&B https://app.wandb.ai/humble_d/emergency-vehicle-detection ]", type="info3")
+    cprint("[ Logging started on W&B https://app.wandb.ai/humble_d/cornell-birdcall-identification ]", type="info3")
 
-    wandb.init(project="emergency-vehicle-detection")
+    wandb.init(project="cornell-birdcall-identification")
 
     wandb.config.session = config.session_name
     wandb.config.seed = config.seed
