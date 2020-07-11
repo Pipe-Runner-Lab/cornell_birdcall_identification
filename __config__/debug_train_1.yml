@@ -3,13 +3,13 @@ seed: 1024
 classes: 264
 
 train:
-  epochs: 50
-  batch: 1
+  epochs: 2
+  batch: 100
   workers: 2
   grad_accum: 2
 
 val:
-  freq: 10
+  freq: 1
   batch: 1
   workers: 2
 
@@ -21,7 +21,7 @@ train_data:
     resize: 224x224
 
 val_data:
-  name: bird_song_v2
+  name: bird_song_v2_test
   params:
     transformer: DFLT
     audio_transformer: DFLT
@@ -49,4 +49,4 @@ scheduler:
   #   threshold: 0.0005
 
 loss:
-  name: cross-entropy
+  name: binary-cross-entropy

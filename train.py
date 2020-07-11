@@ -76,8 +76,6 @@ def _train_single_ep(config, dataloader, model, optimiser, criterion, device, pr
         input = input.to(device)
         target = target.to(device)
 
-        print(input, target)
-
         # forward pass
         # TODO: add space for aux logit
         output = predict_all(model, input)

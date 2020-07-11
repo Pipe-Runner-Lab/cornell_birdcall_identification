@@ -43,7 +43,7 @@ class Bird_Song_v2_Test_Dataset(Dataset):
         self.data_path = data_path
 
         
-        self.csv_path = Path(data_path) / self.mode + ".csv"
+        self.csv_path = Path(data_path) / (self.mode + ".csv")
         self.data_dir = Path(data_path) / self.mode
 
         self.data_frame = pd.read_csv(self.csv_path)
@@ -62,14 +62,17 @@ class Bird_Song_v2_Test_Dataset(Dataset):
         row_id = self.data_frame["filename_seconds"][idx]
         seconds = self.data_frame["seconds"][idx]
         filename = self.data_frame["filename"][idx]
-        ebird_codes = self.data_frame["birds"][idx].split(' ')
+        try:
+            ebird_codes = self.data_frame["birds"][idx].split(' ')
+        except:
+            ebird_codes = []
 
         # generate file path
-        audio_filepath = self.data_dir / filename + '.wav'
+        audio_filepath = self.data_dir / (filename + '.wav')
 
         y, _ = sf.read(audio_filepath)
 
-        # trip audio
+        # trim audio
         end_seconds = int(seconds)
         start_seconds = int(end_seconds - 5)
             
@@ -91,4 +94,4 @@ class Bird_Song_v2_Test_Dataset(Dataset):
             except:
                 index = 0
             label[index] = 1
-        return self.transformer(image), label
+        return self.transformer["image"](image), label

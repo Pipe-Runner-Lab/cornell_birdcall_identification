@@ -67,13 +67,13 @@ class ExperimentHelper:
                 path.join(RESULTS_ROOT_DIR, self.session_name, 'loss_wt.pth')
             )
 
-        # storing aroc for check
-        if self.best_scores["val/aroc"] <= result_dict["val/aroc"]:
-            self.best_scores["val/aroc"] = result_dict["val/aroc"]
-            torch.save(
-                weights_dict,
-                path.join(RESULTS_ROOT_DIR, self.session_name, 'aroc_wt.pth')
-            )
+        # # storing aroc for check
+        # if self.best_scores["val/aroc"] <= result_dict["val/aroc"]:
+        #     self.best_scores["val/aroc"] = result_dict["val/aroc"]
+        #     torch.save(
+        #         weights_dict,
+        #         path.join(RESULTS_ROOT_DIR, self.session_name, 'aroc_wt.pth')
+        #     )
 
         # storing acc for check
         if self.best_scores["val/acc"] <= result_dict["val/acc"]:
