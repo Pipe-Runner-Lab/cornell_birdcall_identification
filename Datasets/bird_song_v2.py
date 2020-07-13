@@ -1,4 +1,5 @@
 import torch
+import cv2
 import numpy as np
 import pandas as pd
 import librosa
@@ -8,7 +9,7 @@ from pathlib import Path
 
 from torch.utils.data import Dataset
 
-from Datasets.utils import (fold_creator, mono_to_color)
+from Datasets.utils import (fold_creator, scale_minmax)
 from utils.submission_utils import BIRD_CODE
 
 NUMBER_OF_FOLDS = 5
@@ -113,7 +114,9 @@ class Bird_Song_v2_Dataset(Dataset):
             melspec = librosa.feature.melspectrogram(y, sr=sr, **MEL_PARAMS)
             melspec = librosa.power_to_db(melspec).astype(np.float32)
 
-            image = mono_to_color(melspec)
+            image = scale_minmax(melspec, 0, 255).astype(np.uint8)
+            image = 255 - image
+            image = cv2.cvtColor(image,cv2.COLOR_GRAY2RGB)
 
         # converting to one hotvector
         label = np.zeros(len(BIRD_CODE), dtype="f")

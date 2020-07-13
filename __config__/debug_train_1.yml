@@ -3,7 +3,7 @@ seed: 1024
 classes: 264
 
 train:
-  epochs: 10
+  epochs: 50
   batch: 50
   workers: 4
   # grad_accum: 2
@@ -51,4 +51,4 @@ scheduler:
   #   threshold: 0.0005
 
 loss:
-  name: binary-cross-entropy
+  name: cross-entropy

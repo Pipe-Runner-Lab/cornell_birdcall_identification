@@ -67,13 +67,13 @@ class ExperimentHelper:
                 path.join(RESULTS_ROOT_DIR, self.session_name, 'loss_wt.pth')
             )
 
-        # # storing aroc for check
-        # if self.best_scores["val/aroc"] <= result_dict["val/aroc"]:
-        #     self.best_scores["val/aroc"] = result_dict["val/aroc"]
-        #     torch.save(
-        #         weights_dict,
-        #         path.join(RESULTS_ROOT_DIR, self.session_name, 'aroc_wt.pth')
-        #     )
+        # storing aroc for check
+        if self.best_scores["val/aroc"] <= result_dict["val/aroc"]:
+            self.best_scores["val/aroc"] = result_dict["val/aroc"]
+            torch.save(
+                weights_dict,
+                path.join(RESULTS_ROOT_DIR, self.session_name, 'aroc_wt.pth')
+            )
 
         # storing acc for check
         if self.best_scores["val/acc"] <= result_dict["val/acc"]:
@@ -110,18 +110,18 @@ class ExperimentHelper:
             train_output_list,
             train_target_list
         )
-        result_dict["val/acc"] = metric.acc(
-            val_output_list,
-            val_target_list
-        )
+        # result_dict["val/acc"] = metric.acc(
+        #     val_output_list,
+        #     val_target_list
+        # )
 
-        # # generating aroc scores
+        # generating aroc scores
         # result_dict["train/aroc"] = metric.aroc(
         #     train_output_list, train_target_list)
         # result_dict["val/aroc"] = metric.aroc(
         #     val_output_list, val_target_list)
 
-        # # generate confusion matrix (validation only)
+        # generate confusion matrix (validation only)
         # metric.confusion_matrix_generator(
         #     val_output_list,
         #     val_target_list,
@@ -135,7 +135,7 @@ class ExperimentHelper:
         self.save_tb_event(result_dict, epoch)
 
         # check for progress and save
-        self.save_checkpoint_conditional(result_dict, weights_dict)
+        # self.save_checkpoint_conditional(result_dict, weights_dict)
 
         # publish intermediate results
         self.publish and self.publish_intermediate(

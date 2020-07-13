@@ -34,4 +34,6 @@ GPU_IDX=0
 # CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_3_g.yml" -p
 
 # Dummy run
-CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="debug_train_1.yml" --dev -p
+# CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="debug_train_1.yml" --dev -p
+# CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="debug_train_2.yml" --dev -p
+CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_1.yml" --dev

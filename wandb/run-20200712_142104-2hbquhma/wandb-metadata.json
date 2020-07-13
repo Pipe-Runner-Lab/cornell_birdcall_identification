@@ -1,0 +1,29 @@
+{
+    "root": "/home/humble_d/Projects/deep_learning/cornell_birdcall_identification",
+    "program": "main.py",
+    "git": {
+        "remote": "https://github.com/AakashMallik/cornell_birdcall_identification.git",
+        "commit": "080746c6c6d00f874307a7cafde8227e9768d66e"
+    },
+    "email": "aakashs.mallik.cse15@itbhu.ac.in",
+    "startedAt": "2020-07-12T08:51:04.786900",
+    "host": "coldboot",
+    "username": "humble_d",
+    "executable": "/usr/bin/python3",
+    "os": "Linux-5.4.0-40-generic-x86_64-with-glibc2.29",
+    "python": "3.8.2",
+    "gpu": "GeForce RTX 2060 SUPER",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "args": [
+        "--config=debug_train_1.yml",
+        "--dev",
+        "-p"
+    ],
+    "state": "finished",
+    "jobType": null,
+    "mode": "run",
+    "project": "cornell-birdcall-identification",
+    "heartbeatAt": "2020-07-12T16:09:50.841809",
+    "exitcode": 0
+}

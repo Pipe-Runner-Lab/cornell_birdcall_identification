@@ -5,18 +5,9 @@ import pretrainedmodels
 import torchvision.models as models
 from efficientnet_pytorch import EfficientNet
 
-
-def get_default_fc(num_ftrs,adjusted_classes, params):
-    return nn.Sequential(
-        nn.Linear(num_ftrs, 1024, bias=True),
-        nn.ReLU(),
-        nn.Dropout(p=params.fc_drop_out_0),
-        nn.Linear(1024, 1024, bias=True),
-        nn.ReLU(),
-        nn.Dropout(p=params.fc_drop_out_1),
-        nn.Linear(1024, adjusted_classes, bias=True)
-    )
-
+from Models.m_resnet50 import m_resnet50
+from Models.utils import get_default_fc
+from Models.layer_utils import GeM
 
 def get(config=None):
     name = config.model.name
@@ -111,6 +102,16 @@ def get(config=None):
                 param.requires_grad = False
         num_ftrs = model._fc.in_features
         model._fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
+    elif name == 'm-resnet50':
+        model = m_resnet50(adjusted_classes, config)
+        if tune_type == 'FE':
+            for param in model.parameters():
+                param.requires_grad = False
+
+        model.avgpool = GeM()
+
+        num_ftrs = model.fc.in_features
+        model.fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
     else:
         raise Exception("model not in list!")
 

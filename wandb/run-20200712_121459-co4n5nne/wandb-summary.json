@@ -1,0 +1,1 @@
+{"b/val/loss": Infinity, "b/val/aroc": 0, "b/val/acc": 0, "epoch": 14, "_runtime": 7287.194385766983, "_step": 13, "_timestamp": 1594543585.540283, "train/loss": 4.6075626910764615, "train/acc": 0.03128128498792648, "val/loss": 5.941033363342285, "train/lr": 0.0002061073738537643}

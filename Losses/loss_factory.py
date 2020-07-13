@@ -2,7 +2,7 @@ from torch.nn import (CrossEntropyLoss, NLLLoss, MSELoss, BCEWithLogitsLoss)
 from Losses.focal_loss import FocalLoss
 from Losses.arcface_loss import ArcfaceLoss
 from Losses.utils import (ClassificationLossWrapper,
-                          RegressionLossWrapper, MixedLossWrapper)
+                          RegressionLossWrapper, MixedLossWrapper, OHtoScalar)
 
 
 def _get_pure(function_name, params=None):
@@ -21,7 +21,7 @@ def _get_pure(function_name, params=None):
             loss_function = FocalLoss()
 
     elif function_name == 'cross-entropy':
-        loss_function = CrossEntropyLoss(reduction="mean")
+        loss_function = OHtoScalar(CrossEntropyLoss(reduction="mean"))
 
     elif function_name == 'negative-log-likelihood':
         loss_function = NLLLoss()

@@ -82,3 +82,8 @@ def mono_to_color(
         # Just zero
         V = np.zeros_like(Xstd, dtype=np.uint8)
     return V
+
+def scale_minmax(X, min=0.0, max=1.0, eps=1e-6):
+    X_std = (X - X.min()) / (X.max() - X.min() + eps)
+    X_scaled = X_std * (max - min) + min
+    return X_scaled
