@@ -1,0 +1,51 @@
+mode: TRA
+seed: 1024
+classes: 264
+
+train:
+  epochs: 150
+  batch: 25
+  workers: 4
+  grad_accum: 2
+
+val:
+  freq: 2
+  batch: 150
+  workers: 4
+
+train_data:
+  name: bird_song_v2
+  params:
+    transformer: DFLT
+    audio_transformer: DFLT
+    resize: 224x547
+
+val_data:
+  name: bird_song_v2_test
+  params:
+    transformer: DFLT
+    audio_transformer: DFLT
+    resize: 224x547
+
+model:
+  name: resnet50
+  params:
+    pred_type: CLS
+    tune_type: FT
+    fc_drop_out_0: 0.3
+    fc_drop_out_1: 0.3
+
+optimiser:
+  name: AdamW
+  params:
+    lr: 0.001
+    weight_decay: 0.001
+
+scheduler:
+  name: CosineAnnealing
+  params:
+    T_max: 15
+    eta_min: 0.000001
+
+loss:
+  name: binary-cross-entropy

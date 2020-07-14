@@ -44,6 +44,9 @@ def get(config=None):
         if tune_type == 'FE':
             for param in model.parameters():
                 param.requires_grad = False
+
+        model.avgpool = GeM()
+        
         num_ftrs = model.fc.in_features
         model.fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
     elif name == 'resnet101':
