@@ -1,6 +1,6 @@
 import torch
 from torch.nn.functional import (softmax)
-from sklearn.metrics import (roc_auc_score, confusion_matrix)
+from sklearn.metrics import (roc_auc_score, confusion_matrix, f1_score)
 import matplotlib.pyplot as plt
 import seaborn as sn
 
@@ -42,9 +42,11 @@ def acc(output_list, target_list):
     return 1.0 * torch.sum(acc.int()).item() / output_list.size()[0]
 
 
-def f1(output_list, target_list):
-    # TODO: Complete implementation
-    pass
+def f1(output_list, target_list , threshold = 0.5):
+    output_list = torch.sigmoid(output_list) > threshold
+    output_list = output_list.float().numpy()
+    target_list = target_list.float().numpy()
+    return f1_score(target_list, output_list, average="samples") 
 
 
 def aroc(output_list, target_list):

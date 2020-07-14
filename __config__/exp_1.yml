@@ -3,13 +3,13 @@ seed: 1024
 classes: 264
 
 train:
-  epochs: 30
+  epochs: 100
   batch: 50
   workers: 4
-  # grad_accum: 2
+  grad_accum: 2
 
 val:
-  freq: 1
+  freq: 2
   batch: 256
   workers: 4
 
@@ -44,8 +44,8 @@ optimiser:
 scheduler:
   name: CosineAnnealing
   params:
-    T_max: 10
+    T_max: 20
     eta_min: 0.000001
 
 loss:
-  name: cross-entropy
+  name: binary-cross-entropy

@@ -23,7 +23,9 @@ class ExperimentHelper:
         self.best_scores = {
             "val/loss": float('inf'),
             "val/aroc": 0,
-            "val/acc": 0
+            "val/acc": 0,
+            "train/acc": 0,
+            "train/f1": 0,
         }
 
         if config.checkpoint.type != "RSM":
@@ -60,27 +62,43 @@ class ExperimentHelper:
 
     def save_checkpoint_conditional(self, result_dict, weights_dict):
         # storing loss for check
-        if self.best_scores["val/loss"] >= result_dict["val/loss"]:
-            self.best_scores["val/loss"] = result_dict["val/loss"]
-            torch.save(
-                weights_dict,
-                path.join(RESULTS_ROOT_DIR, self.session_name, 'loss_wt.pth')
-            )
+        # if self.best_scores["val/loss"] >= result_dict["val/loss"]:
+        #     self.best_scores["val/loss"] = result_dict["val/loss"]
+        #     torch.save(
+        #         weights_dict,
+        #         path.join(RESULTS_ROOT_DIR, self.session_name, 'loss_wt.pth')
+        #     )
 
         # storing aroc for check
-        if self.best_scores["val/aroc"] <= result_dict["val/aroc"]:
-            self.best_scores["val/aroc"] = result_dict["val/aroc"]
-            torch.save(
-                weights_dict,
-                path.join(RESULTS_ROOT_DIR, self.session_name, 'aroc_wt.pth')
-            )
+        # if self.best_scores["val/aroc"] <= result_dict["val/aroc"]:
+        #     self.best_scores["val/aroc"] = result_dict["val/aroc"]
+        #     torch.save(
+        #         weights_dict,
+        #         path.join(RESULTS_ROOT_DIR, self.session_name, 'aroc_wt.pth')
+        #     )
 
         # storing acc for check
-        if self.best_scores["val/acc"] <= result_dict["val/acc"]:
-            self.best_scores["val/acc"] = result_dict["val/acc"]
+        # if self.best_scores["val/acc"] <= result_dict["val/acc"]:
+        #     self.best_scores["val/acc"] = result_dict["val/acc"]
+        #     torch.save(
+        #         weights_dict,
+        #         path.join(RESULTS_ROOT_DIR, self.session_name, 'acc_wt.pth')
+        #     )
+
+        # storing acc for check
+        if self.best_scores["train/acc"] <= result_dict["train/acc"]:
+            self.best_scores["train/acc"] = result_dict["train/acc"]
             torch.save(
                 weights_dict,
                 path.join(RESULTS_ROOT_DIR, self.session_name, 'acc_wt.pth')
+            )
+
+        # storing f1 for check
+        if self.best_scores["train/f1"] <= result_dict["train/f1"]:
+            self.best_scores["train/f1"] = result_dict["train/f1"]
+            torch.save(
+                weights_dict,
+                path.join(RESULTS_ROOT_DIR, self.session_name, 'f1_wt.pth')
             )
 
     def validate(self, train_log_dict, val_log_dict, epoch, weights_dict):
@@ -115,6 +133,12 @@ class ExperimentHelper:
         #     val_target_list
         # )
 
+        # generate f1 score
+        result_dict["train/f1"] = metric.f1(
+            train_output_list,
+            train_target_list
+        )
+
         # generating aroc scores
         # result_dict["train/aroc"] = metric.aroc(
         #     train_output_list, train_target_list)
@@ -135,7 +159,7 @@ class ExperimentHelper:
         self.save_tb_event(result_dict, epoch)
 
         # check for progress and save
-        # self.save_checkpoint_conditional(result_dict, weights_dict)
+        self.save_checkpoint_conditional(result_dict, weights_dict)
 
         # publish intermediate results
         self.publish and self.publish_intermediate(
