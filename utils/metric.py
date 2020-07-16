@@ -5,15 +5,16 @@ import matplotlib.pyplot as plt
 import seaborn as sn
 
 
-# def post_process_output(output):
-#     # implementation based on problem statement
-#     THRESHOLD = 0.5
-#     intermediate = torch.sigmoid(output) > THRESHOLD
-#     return intermediate.float()
-
 def post_process_output(output):
     # implementation based on problem statement
-    return softmax(output, dim=1)
+    THRESHOLD = 0.8
+    intermediate = torch.sigmoid(output) > THRESHOLD
+    return intermediate.float()
+
+# def post_process_output(output):
+#     # implementation based on problem statement
+#     return softmax(output, dim=1)
+
 
 def onehot_converter(V, classes):
     # Create zero vector of desired shape
@@ -37,16 +38,15 @@ def onehot_converter(V, classes):
 #     return acc.item()
 
 def acc(output_list, target_list):
-    acc = torch.argmax(target_list, dim=1).eq(
-        torch.argmax(output_list, dim=1))
+    acc = torch.argmax(target_list, dim=1).eq(torch.argmax(post_process_output(output_list), dim=1))
     return 1.0 * torch.sum(acc.int()).item() / output_list.size()[0]
 
 
-def f1(output_list, target_list , threshold = 0.5):
+def f1(output_list, target_list, threshold=0.5):
     output_list = torch.sigmoid(output_list) > threshold
     output_list = output_list.float().numpy()
     target_list = target_list.float().numpy()
-    return f1_score(target_list, output_list, average="samples") 
+    return f1_score(target_list, output_list, average="samples")
 
 
 def aroc(output_list, target_list):

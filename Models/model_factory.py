@@ -45,7 +45,8 @@ def get(config=None):
             for param in model.parameters():
                 param.requires_grad = False
 
-        model.avgpool = GeM()
+        # model.avgpool = GeM()
+        model.avgpool = nn.AdaptiveMaxPool2d(1)
         
         num_ftrs = model.fc.in_features
         model.fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
