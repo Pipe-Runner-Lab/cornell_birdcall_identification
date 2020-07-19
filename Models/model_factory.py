@@ -46,8 +46,7 @@ def get(config=None):
                 param.requires_grad = False
 
         # model.avgpool = GeM()
-        model.avgpool = nn.AdaptiveMaxPool2d(1)
-        
+        model.avgpool = nn.AdaptiveMaxPool2d(1)    
         num_ftrs = model.fc.in_features
         model.fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
     elif name == 'resnet101':
