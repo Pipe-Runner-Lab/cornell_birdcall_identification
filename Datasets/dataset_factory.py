@@ -1,10 +1,10 @@
 from os import path
+from pathlib import Path
 
 from utils.paths import DATA_ROOT_DIR
 
 # list of datasets
-from Datasets.bird_song_v2 import Bird_Song_v2_Dataset
-from Datasets.bird_song_v2_test import Bird_Song_v2_Test_Dataset
+from Datasets.bird_song import Bird_Song_Dataset
 
 
 def get(config=None, mode=None, transformer=None):
@@ -20,21 +20,14 @@ def get(config=None, mode=None, transformer=None):
 
     data_name = data_config.name
     fold = data_config.params.fold
-    data_path = path.join(DATA_ROOT_DIR, data_name)
+    data_path = Path(DATA_ROOT_DIR) / data_name
 
     # ===========================================================================
     #                                Dataset list
     # ===========================================================================
 
-    if data_name == "bird_song_v2":
-        dataset = Bird_Song_v2_Dataset(
-            mode,
-            data_path,
-            transformer,
-            fold
-        )
-    elif data_name == "bird_song_v2_test":
-        dataset = Bird_Song_v2_Test_Dataset(
+    if data_name == "bird_song":
+        dataset = Bird_Song_Dataset(
             mode,
             data_path,
             transformer,
