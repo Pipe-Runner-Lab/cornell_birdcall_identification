@@ -1,1 +1,0 @@
-{"b/val/loss": 0.027081061154603958, "b/val/aroc": 0, "b/val/acc": 0, "_timestamp": 1594475267.8750896, "val/loss": 0.04356461390852928, "train/acc": 0.0, "train/lr": 2.4471741852423235e-05, "val/acc": NaN, "epoch": 10, "_step": 9, "train/loss": 0.023996819489912388, "_runtime": 5228.694067001343}

@@ -41,6 +41,6 @@ GPU_IDX=0
 # CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_3.yml" --dev -p
 
 # 2080Ti Basic run
-CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_4_a.yml" -p
+CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_4_a.yml" --dev
 CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_4_b.yml" --dev
 CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_4_c.yml" --dev

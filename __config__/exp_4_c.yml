@@ -3,14 +3,14 @@ seed: 1024
 classes: 264
 
 train:
-  epochs: 100
-  batch: 100
+  epochs: 40
+  batch: 12
   workers: 4
   # grad_accum: 2
 
 val:
-  freq: 1
-  batch: 500
+  freq: 10
+  batch: 150
   workers: 4
 
 train_data:
@@ -18,7 +18,7 @@ train_data:
   params:
     transformer: DFLT
     audio_transformer: DFLT
-    resize: 224x224
+    resize: 224x547
     fold: 0
 
 val_data:
@@ -26,7 +26,7 @@ val_data:
   params:
     transformer: DFLT
     audio_transformer: DFLT
-    resize: 224x224
+    resize: 224x547
     fold: 0
 
 model:

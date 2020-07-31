@@ -5,7 +5,6 @@ import pretrainedmodels
 import torchvision.models as models
 from efficientnet_pytorch import EfficientNet
 
-from Models.m_resnet50 import m_resnet50
 from Models.utils import get_default_fc
 from Models.layer_utils import GeM
 
