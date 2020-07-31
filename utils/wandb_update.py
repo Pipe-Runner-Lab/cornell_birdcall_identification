@@ -28,8 +28,8 @@ def wandb_init(config):
 
 def publish_intermediate(result_dict, epoch, best_scores, output_list, target_list):
     wandb.run.summary["b/val/loss"] = best_scores["val/loss"]
-    wandb.run.summary["b/val/aroc"] = best_scores["val/aroc"]
     wandb.run.summary["b/val/acc"] = best_scores["val/acc"]
+    wandb.run.summary["b/val/f1"] = best_scores["val/f1"]
 
     # saving confusion matrix (image)
     # wandb.sklearn.plot_confusion_matrix(
