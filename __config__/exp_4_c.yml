@@ -30,7 +30,7 @@ val_data:
     fold: 0
 
 model:
-  name: resnet50
+  name: resnext101_32x8d
   params:
     pred_type: CLS
     tune_type: FT

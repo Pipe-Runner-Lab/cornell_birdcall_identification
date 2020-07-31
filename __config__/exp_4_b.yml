@@ -30,7 +30,7 @@ val_data:
     fold: 0
 
 model:
-  name: resnet50
+  name: efficientnet-b5
   params:
     pred_type: CLS
     tune_type: FT

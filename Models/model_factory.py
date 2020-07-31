@@ -105,16 +105,6 @@ def get(config=None):
                 param.requires_grad = False
         num_ftrs = model._fc.in_features
         model._fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
-    elif name == 'm-resnet50':
-        model = m_resnet50(adjusted_classes, config)
-        if tune_type == 'FE':
-            for param in model.parameters():
-                param.requires_grad = False
-
-        model.avgpool = GeM()
-
-        num_ftrs = model.fc.in_features
-        model.fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
     else:
         raise Exception("model not in list!")
 
