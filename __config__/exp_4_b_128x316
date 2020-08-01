@@ -27,6 +27,7 @@ val_data:
     transformer: DFLT
     audio_transformer: DFLT
     resize: 128x316
+    fold: 0
 
 model:
   name: efficientnet-b5
