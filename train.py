@@ -183,7 +183,7 @@ def _train(config, dataloaders, model, optimiser, scheduler, criterion, exp_help
 
             if scheduler:
                 if config.scheduler.name == 'ReduceLROnPlateau':
-                    scheduler.step(result_dict["val/acc"])
+                    scheduler.step(result_dict["val/f1"])
                 else:
                     scheduler.step()
 

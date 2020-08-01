@@ -26,7 +26,7 @@ val_data:
   params:
     transformer: DFLT
     audio_transformer: DFLT
-    resize: 128x316s
+    resize: 128x316
     fold: 0
 
 model:
