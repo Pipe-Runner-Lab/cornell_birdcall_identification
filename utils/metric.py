@@ -48,6 +48,14 @@ def f1(output_list, target_list, threshold=0.5):
     target_list = target_list.float().numpy()
     return f1_score(target_list, output_list, average="samples")
 
+def f1best(output_list,target_list,threshold=0.5):
+    score=0
+    for th in np.linspace(0.5,0.9,20):
+        out = torch.sigmoid(output_list) > threshold
+        out = out.float().numpy()
+        target_list = target_list.float().numpy()
+        score=max(score,f1_score(target_list, out, average="samples"))
+    return score
 
 def aroc(output_list, target_list):
     output_list = post_process_output(output_list)
