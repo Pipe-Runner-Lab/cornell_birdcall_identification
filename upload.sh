@@ -1,3 +1,2 @@
- python3 main.py --config=''
-
+ python3 upload.py
  

@@ -51,15 +51,14 @@ class ExperimentHelper:
         if self.freq:
             return (i + 1) % self.freq == 0
         return True
-    def save_checkpoint_epochs(self,weights_dict,epoch_freq=10):
 
-        if weights_dict["epoch"]%epoch_freq==0:
+    def save_checkpoint(self, weights_dict, epoch_freq=None):
+        if epoch_freq is not None and weights_dict["epoch"] % epoch_freq == 0:
             torch.save(
                 weights_dict,
-                path.join(RESULTS_ROOT_DIR, self.session_name, 'chkp_wt_{}.pth'.format(weights_dict["epoch"]))
+                path.join(RESULTS_ROOT_DIR, self.session_name,
+                          'chkp_wt_{}.pth'.format(weights_dict["epoch"]))
             )
-
-    def save_checkpoint(self, weights_dict):
 
         torch.save(
             weights_dict,
