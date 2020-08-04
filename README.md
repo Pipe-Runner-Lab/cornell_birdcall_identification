@@ -10,7 +10,7 @@ apt-get install libgtk2.0-dev
 apt-get install libsndfile1
 
 pip install --upgrade torch torchvision
-pip install --user wandb easydict blessed tensorboard pandas sklearn matplotlib seaborn pretrainedmodels efficientnet_pytorch transformers albumentations librosa
+pip install --user wandb easydict blessed tensorboard pandas sklearn matplotlib seaborn pretrainedmodels efficientnet_pytorch transformers albumentations librosa inquirer
 
 ```
 
