@@ -196,6 +196,15 @@ def _train(config, dataloaders, model, optimiser, scheduler, criterion, exp_help
                     'epoch': i + 1
                 }
             )
+            exp_helper.save_checkpoint_epochs(
+                weights_dict={
+                    'model': model.state_dict(),
+                    'optimiser': optimiser.state_dict(),
+                    'scheduler': scheduler.state_dict() if scheduler else None,
+                    'epoch': i + 1
+                },
+                epoch_freq=20
+            )
 
 
 def run(config):
