@@ -195,7 +195,7 @@ def _train(config, dataloaders, model, optimiser, scheduler, criterion, exp_help
                     'scheduler': scheduler.state_dict() if scheduler else None,
                     'epoch': i + 1
                 },
-                epoch_freq=20
+                epoch_freq=10
             )
 
 
