@@ -1,0 +1,3 @@
+- [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/170821
+- [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/168667
+- [ ] https://www.kaggle.com/c/birdsong-recognition/discussion/168657
