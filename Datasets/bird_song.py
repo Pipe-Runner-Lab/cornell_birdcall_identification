@@ -8,7 +8,7 @@ from skimage import io
 from pathlib import Path
 
 from torch.utils.data import Dataset
-
+from utils.noise import add_noise
 from Datasets.utils import scale_minmax
 from utils.submission_utils import BIRD_CODE
 
@@ -78,7 +78,8 @@ class Bird_Song_Dataset(Dataset):
             y = y[start:start + effective_length].astype(np.float32)
         else:
             y = y.astype(np.float32)
-
+        if self.mode != "val":
+            y,sr=add_noise(y,0.7)
         melspec = librosa.feature.melspectrogram(y, sr=sr, **MEL_PARAMS)
         melspec = librosa.power_to_db(melspec).astype(np.float32)
 
