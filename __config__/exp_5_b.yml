@@ -50,4 +50,9 @@ scheduler:
     eta_min: 0
 
 loss:
-  name: binary-cross-entropy 
+  name: binary-cross-entropy
+
+checkpoint:
+  type: RSM
+  params:
+    path: chkp_wt.pth 
