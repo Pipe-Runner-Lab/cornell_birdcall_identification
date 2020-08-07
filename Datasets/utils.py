@@ -1,4 +1,4 @@
-from os import (makedirs, path)
+from os import (makedirs, path, listdir)
 from shutil import copy
 import pandas as pd
 import numpy as np
@@ -102,11 +102,10 @@ def add_noise(audio, coeff):
         coeff: coeff is the proportion of noise to be added
     """
 
-    noise_dir = Path(DATA_ROOT_DIR) / "noise" / "10_sec_clip"
+    noise_dir = Path(DATA_ROOT_DIR) / "bird_song" / "noise"
 
-    noise_df = pd.read_csv(Path(noise_dir / "df.csv"))
-    samp = np.random.randint(len(noise_df))
-    noise_file_path = noise_dir / noise_df.iloc[samp].file_name
+    noise_file_path = random.choice(listdir(noise_dir))
+    noise_file_path = noise_dir / noise_file_path
 
     n_y, n_sr = sf.read(noise_file_path)
     length = n_y.shape[0]
