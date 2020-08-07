@@ -31,7 +31,8 @@ def get(config=None, mode=None, transformer=None):
             mode,
             data_path,
             transformer,
-            fold
+            fold,
+            noise = False
         )
     else:
         raise Exception("dataset not in list!")

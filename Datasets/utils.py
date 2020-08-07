@@ -3,6 +3,10 @@ from shutil import copy
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
+import soundfile as sf
+from pathlib import Path
+import random
+from utils.paths import DATA_ROOT_DIR
 
 
 def fold_creator(org_dataset_path, dataset_path, number_of_folds):
@@ -83,7 +87,44 @@ def mono_to_color(
         V = np.zeros_like(Xstd, dtype=np.uint8)
     return V
 
+
 def scale_minmax(X, min=0.0, max=1.0, eps=1e-6):
     X_std = (X - X.min()) / (X.max() - X.min() + eps)
     X_scaled = X_std * (max - min) + min
     return X_scaled
+
+
+def add_noise(audio, coeff):
+    """Adds noise to provided audio clip
+
+    Args:
+        audio: audio file wihtout noise
+        coeff: coeff is the proportion of noise to be added
+    """
+
+    noise_dir = Path(DATA_ROOT_DIR) / "noise" / "10_sec_clip"
+
+    noise_df = pd.read_csv(Path(noise_dir / "df.csv"))
+    samp = np.random.randint(len(noise_df))
+    noise_file_path = noise_dir / noise_df.iloc[samp].file_name
+
+    n_y, n_sr = sf.read(noise_file_path)
+    length = n_y.shape[0]
+    effective_length = n_sr * 5
+
+    if length < effective_length:
+        new_y = np.zeros(effective_length, dtype=n_y.dtype)
+        start = np.random.randint(effective_length - length)
+        new_y[start:start + length] = n_y
+        n_y = new_y.astype(np.float32)
+    elif length > effective_length:
+        start = np.random.randint(length - effective_length)
+        n_y = n_y[start:start + effective_length].astype(np.float32)
+    else:
+        n_y = n_y.astype(np.float32)
+
+    noise_energy = np.sqrt(n_y.dot(n_y))
+    audio_energy = np.sqrt(audio.dot(audio))
+
+    audio += coeff * n_y * (audio_energy / noise_energy)
+    return audio, n_sr

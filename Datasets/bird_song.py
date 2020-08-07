@@ -19,7 +19,7 @@ MEL_PARAMS = {'n_mels': 128, 'fmin': 20, 'fmax': 16000}
 
 
 class Bird_Song_Dataset(Dataset):
-    def __init__(self, mode, data_path, transformer=None, fold_number=0):
+    def __init__(self, mode, data_path, transformer=None, fold_number=0, noise=False):
         if transformer is None:
             raise Exception("transformer missing!")
         if fold_number is None or fold_number >= NUMBER_OF_FOLDS:
@@ -35,6 +35,7 @@ class Bird_Song_Dataset(Dataset):
         self.transformer = transformer
         self.csv_path = data_path / ("train.csv")
         self.data_dir = data_path / "audio"
+        self.noise = noise
 
         self.data_frame = pd.read_csv(self.csv_path)
         if self.mode == "TRA":
@@ -78,8 +79,11 @@ class Bird_Song_Dataset(Dataset):
             y = y[start:start + effective_length].astype(np.float32)
         else:
             y = y.astype(np.float32)
-        if self.mode != "val":
-            y,sr=add_noise(y,0.7)
+
+        # Adding noise
+        if self.noise and self.mode == "train":
+            y, sr = add_noise(y, 0.7)
+
         melspec = librosa.feature.melspectrogram(y, sr=sr, **MEL_PARAMS)
         melspec = librosa.power_to_db(melspec).astype(np.float32)
 
