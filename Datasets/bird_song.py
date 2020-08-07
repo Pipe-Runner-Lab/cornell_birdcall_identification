@@ -8,7 +8,7 @@ from skimage import io
 from pathlib import Path
 
 from torch.utils.data import Dataset
-from utils.noise import add_noise
+from Datasets.utils import add_noise
 from Datasets.utils import scale_minmax
 from utils.submission_utils import BIRD_CODE
 
