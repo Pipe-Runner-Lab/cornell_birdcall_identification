@@ -5,7 +5,7 @@ from utils.paths import DATA_ROOT_DIR
 
 # list of datasets
 from Datasets.bird_song import Bird_Song_Dataset
-
+from Datasets.bird_song_pann import  Bird_Song_Dataset_PANN
 
 def get(config=None, mode=None, transformer=None):
 
