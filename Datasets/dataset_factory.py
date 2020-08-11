@@ -34,6 +34,15 @@ def get(config=None, mode=None, transformer=None):
             fold,
             noise = True
         )
+    if data_name == "bird_song_pann":
+        dataset=Bird_Song_Dataset_PANN(
+            mode,
+            data_path,
+            None,
+            fold,
+            noise = False
+        )
+
     else:
         raise Exception("dataset not in list!")
 
