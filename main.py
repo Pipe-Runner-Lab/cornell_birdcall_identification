@@ -39,6 +39,12 @@ def parse_args():
         action="store_true",
         help="Vote a submission from existing results"
     )
+    parser.add_argument(
+    	'-mp',
+    	'--mixed_precision'
+    	action="store_true",
+    	help="Train in mixed precision"
+    )
     return parser.parse_args()
 
 def main():
@@ -52,7 +58,7 @@ def main():
     config.dev = args.dev
 
     config.vote = args.vote
-    
+    config.mp=args.mixed_precision
     # pp.pprint(config)
 
     if config.mode == "TRA":
