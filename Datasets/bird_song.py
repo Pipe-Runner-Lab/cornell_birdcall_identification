@@ -19,7 +19,7 @@ MEL_PARAMS = {'n_mels': 128, 'fmin': 20, 'fmax': 16000}
 
 
 class Bird_Song_Dataset(Dataset):
-    def __init__(self, mode, data_path, transformer=None, fold_number=0, noise=False):
+    def __init__(self, mode, data_path, transformer=None, fold_number=0, noise=False, mel_spec=True):
         if transformer is None:
             raise Exception("transformer missing!")
         if fold_number is None or fold_number >= NUMBER_OF_FOLDS:
@@ -36,6 +36,7 @@ class Bird_Song_Dataset(Dataset):
         self.csv_path = data_path / ("train.csv")
         self.data_dir = data_path / "audio"
         self.noise = noise
+        self.mel_spec = mel_spec
 
         self.data_frame = pd.read_csv(self.csv_path)
         if self.mode == "TRA":
@@ -84,14 +85,19 @@ class Bird_Song_Dataset(Dataset):
         if self.noise and self.mode == "train":
             y, sr = add_noise(y, 0.7)
 
-        melspec = librosa.feature.melspectrogram(y, sr=sr, **MEL_PARAMS)
-        melspec = librosa.power_to_db(melspec).astype(np.float32)
-
-        image = scale_minmax(melspec, 0, 255).astype(np.uint8)
-        image = 255 - image
-        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
-
         # converting to one hotvector
         label = np.zeros(len(BIRD_CODE), dtype="f")
         label[BIRD_CODE[ebird_code]] = 1
-        return self.transformer["image"](image), label
+
+        if self.mel_spec:
+            melspec = librosa.feature.melspectrogram(y, sr=sr, **MEL_PARAMS)
+            melspec = librosa.power_to_db(melspec).astype(np.float32)
+
+            image = scale_minmax(melspec, 0, 255).astype(np.uint8)
+            image = 255 - image
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+
+            return self.transformer["image"](image), label
+        else:
+            y = torch.from_numpy(y)
+            return y, label

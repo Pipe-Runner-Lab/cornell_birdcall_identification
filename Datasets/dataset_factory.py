@@ -5,7 +5,7 @@ from utils.paths import DATA_ROOT_DIR
 
 # list of datasets
 from Datasets.bird_song import Bird_Song_Dataset
-from Datasets.bird_song_pann import  Bird_Song_Dataset_PANN
+
 
 def get(config=None, mode=None, transformer=None):
 
@@ -32,17 +32,9 @@ def get(config=None, mode=None, transformer=None):
             data_path,
             transformer,
             fold,
-            noise = True
+            noise=True,
+            mel_spec=False
         )
-    if data_name == "bird_song_pann":
-        dataset=Bird_Song_Dataset_PANN(
-            mode,
-            data_path,
-            None,
-            fold,
-            noise = False
-        )
-
     else:
         raise Exception("dataset not in list!")
 

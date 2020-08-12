@@ -1,4 +1,4 @@
-from torch.nn import (CrossEntropyLoss, NLLLoss, MSELoss, BCEWithLogitsLoss)
+from torch.nn import (CrossEntropyLoss, NLLLoss, MSELoss, BCEWithLogitsLoss, BCELoss)
 from Losses.focal_loss import FocalLoss
 from Losses.arcface_loss import ArcfaceLoss
 from Losses.utils import (ClassificationLossWrapper,
@@ -34,6 +34,9 @@ def _get_pure(function_name, params=None):
 
     elif function_name == 'binary-cross-entropy':
         loss_function = BCEWithLogitsLoss(reduction="mean")
+
+    elif function_name == 'binary-cross-entropy-non-logit':
+        loss_function = BCELoss(reduction="mean")
 
     else:
         raise Exception("loss function not in list!")

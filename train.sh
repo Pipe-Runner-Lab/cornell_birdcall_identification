@@ -48,4 +48,7 @@ GPU_IDX=0
 # CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_5_c.yml" --dev -p
 
 # Noise experiments
-CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_6_a.yml" --dev
+# CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_6_a.yml" --dev
+
+# Pann networks
+CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_7_a.yml" --dev

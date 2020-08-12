@@ -7,7 +7,7 @@ from efficientnet_pytorch import EfficientNet
 
 from Models.utils import get_default_fc
 from Models.layer_utils import GeM
-from Models.Cnn14_Decision_level_Attn.py import Pann_Cnn14_Attn
+from Models.pann import AttBlock, Pann_Cnn14_Attn
 
 def get(config=None):
     name = config.model.name
@@ -105,8 +105,9 @@ def get(config=None):
                 param.requires_grad = False
         num_ftrs = model._fc.in_features
         model._fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
-    elif name == 'Pann_Cnn14_Attn':
-        model = Pann_Cnn14_Attn(config)
+    elif name == 'pann-cnn14-attn':
+        model = Pann_Cnn14_Attn( pretrained=True )
+        model.att_block = AttBlock(2048, adjusted_classes, activation='sigmoid')
     else:
         raise Exception("model not in list!")
 
