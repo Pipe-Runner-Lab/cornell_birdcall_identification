@@ -19,6 +19,7 @@ from WaveTransformers import wave_transformer_factory
 from Datasets import dataset_factory
 
 
+
 def predict_all(model, input):
     output = model.forward(input)
     return output
@@ -89,7 +90,11 @@ def _train_single_ep(config, dataloader, model, optimiser, criterion, device, pr
         )
 
         # backward pass
-        loss.backward()
+        if config.mp:
+            with amp.scale_loss(loss, optimiser) as scaled_loss:
+                scaled_loss.backward()
+        else:
+            loss.backward()
 
         # log training values
         if is_val:
@@ -295,6 +300,19 @@ def run(config):
         scheduler
     )
 
+    if config.mp:
+        try:
+            from apex.parallel import DistributedDataParallel as DDP
+            from apex.fp16_utils import *
+            from apex import amp, optimizers
+            from apex.multi_tensor_apply import multi_tensor_applier
+        except ImportError:
+            raise ImportError("Please install apex from https://www.github.com/nvidia/apex to run this example.")
+
+        model, optimiser = amp.initialize(model, optimizer,
+                                      opt_level="O1",
+                                      keep_batchnorm_fp32=True,
+                                      )
     _train(
         config,
         dataloaders,
