@@ -11,7 +11,6 @@ def post_process_output(output):
     THRESHOLD = 0.8
     intermediate = torch.sigmoid(output) > THRESHOLD
     # intermediate = output > THRESHOLD
-    
     return intermediate.float()
 
 # def post_process_output(output):

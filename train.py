@@ -2,6 +2,10 @@ import torch
 from os import path
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
+from apex.parallel import DistributedDataParallel as DDP
+from apex.fp16_utils import *
+from apex import amp, optimizers
+from apex.multi_tensor_apply import multi_tensor_applier
 
 from utils.seed_backend import seed_all
 from utils.custom_bar import CustomBar
@@ -17,7 +21,6 @@ from Schedulers import scheduler_factory
 from Transformers import transformer_factory
 from WaveTransformers import wave_transformer_factory
 from Datasets import dataset_factory
-
 
 
 def predict_all(model, input):
@@ -301,18 +304,13 @@ def run(config):
     )
 
     if config.mp:
-        try:
-            from apex.parallel import DistributedDataParallel as DDP
-            from apex.fp16_utils import *
-            from apex import amp, optimizers
-            from apex.multi_tensor_apply import multi_tensor_applier
-        except ImportError:
-            raise ImportError("Please install apex from https://www.github.com/nvidia/apex to run this example.")
+        print("[ Mixed Precision ]")
+        model, optimiser = amp.initialize(
+            model, optimiser,
+            opt_level="O1",
+            # keep_batchnorm_fp32=True,
+        )
 
-        model, optimiser = amp.initialize(model, optimizer,
-                                      opt_level="O1",
-                                      keep_batchnorm_fp32=True,
-                                      )
     _train(
         config,
         dataloaders,

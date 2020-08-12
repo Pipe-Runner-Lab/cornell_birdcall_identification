@@ -3,14 +3,14 @@ seed: 1024
 classes: 264
 
 train:
-  epochs: 100
-  batch: 80
+  epochs: 50
+  batch: 50
   workers: 4
   # grad_accum: 2
 
 val:
   freq: 5
-  batch: 300
+  batch: 150
   workers: 4
 
 train_data:

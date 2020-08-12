@@ -32,8 +32,8 @@ def get(config=None, mode=None, transformer=None):
             data_path,
             transformer,
             fold_number=fold,
-            mel_spec=True,
-            multi_label=False
+            multi_label=False,
+            mel_spec=True
         )
     else:
         raise Exception("dataset not in list!")
