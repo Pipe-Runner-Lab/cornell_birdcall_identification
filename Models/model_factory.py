@@ -44,7 +44,6 @@ def get(config=None):
         if tune_type == 'FE':
             for param in model.parameters():
                 param.requires_grad = False
-
         # model.avgpool = GeM()
         model.avgpool = nn.AdaptiveMaxPool2d(1)    
         num_ftrs = model.fc.in_features

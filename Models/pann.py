@@ -187,7 +187,7 @@ class Cnn14_DecisionLevelAtt(nn.Module):
         self.conv_block6 = ConvBlock(in_channels=1024, out_channels=2048)
 
         self.fc1 = nn.Linear(2048, 2048, bias=True)
-        self.att_block = AttBlock(2048, classes_num, activation='sigmoid')
+        self.att_block = AttBlock(2048, classes_num, activation='linear')
 
         self.init_weight()
 
@@ -228,20 +228,23 @@ class Cnn14_DecisionLevelAtt(nn.Module):
         x = F.dropout(x, p=0.2, training=self.training)
         x = self.conv_block6(x, pool_size=(1, 1), pool_type='avg')
         x = F.dropout(x, p=0.2, training=self.training)
+        
+        # (batch,channels,time)
         x = torch.mean(x, dim=3)
-        # shape is (batch,channels,time,frequency)
+        
         x1 = F.max_pool1d(x, kernel_size=3, stride=1, padding=1)
         x2 = F.avg_pool1d(x, kernel_size=3, stride=1, padding=1)
         x = x1 + x2
+        
         x = F.dropout(x, p=0.5, training=self.training)
         x = x.transpose(1, 2)
         x = F.relu_(self.fc1(x))
         x = x.transpose(1, 2)
         x = F.dropout(x, p=0.5, training=self.training)
+        
         (clipwise_output, _, segmentwise_output) = self.att_block(x)
+        
         segmentwise_output = segmentwise_output.transpose(1, 2)
-        # clipwise shape is (batch,classes)
-        # segmentwise_output is (batch,classes,time_segments) after softmax on time dimension
 
         # Get framewise output
         framewise_output = interpolate(
