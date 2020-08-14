@@ -9,7 +9,8 @@ import numpy as np
 def post_process_output(output):
     # implementation based on problem statement
     THRESHOLD = 0.8
-    intermediate = torch.sigmoid(output) > THRESHOLD
+    # intermediate = torch.sigmoid(output) > THRESHOLD
+    intermediate = output > THRESHOLD
     
     return intermediate.float()
 
@@ -45,7 +46,8 @@ def acc(output_list, target_list):
 
 
 def f1(output_list, target_list, threshold=0.5):
-    output_list = torch.sigmoid(output_list) > threshold
+    # output_list = torch.sigmoid(output_list) > threshold
+    output_list = output_list > threshold
 
     output_list = output_list.float().numpy()
     target_list = target_list.float().numpy()

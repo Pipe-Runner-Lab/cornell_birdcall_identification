@@ -19,7 +19,7 @@ MEL_PARAMS = {'n_mels': 128, 'fmin': 20, 'fmax': 16000}
 
 
 class Bird_Song_Dataset(Dataset):
-    def __init__(self, mode, data_path, transformer=None, fold_number=0, noise=False, mel_spec=True):
+    def __init__(self, mode, data_path, transformer=None, fold_number=0, noise=False, mel_spec=True, multi_label=False):
         if transformer is None:
             raise Exception("transformer missing!")
         if fold_number is None or fold_number >= NUMBER_OF_FOLDS:
@@ -37,6 +37,7 @@ class Bird_Song_Dataset(Dataset):
         self.data_dir = data_path / "audio"
         self.noise = noise
         self.mel_spec = mel_spec
+        self.multi_label = multi_label
 
         self.data_frame = pd.read_csv(self.csv_path)
         if self.mode == "TRA":
@@ -51,20 +52,7 @@ class Bird_Song_Dataset(Dataset):
     def get_csv_path(self):
         return self.csv_path
 
-    def __len__(self):
-        return len(self.data_frame)
-
-    def __getitem__(self, idx):
-        if torch.is_tensor(idx):
-            idx = idx.tolist()
-
-        # get basic data path
-        ebird_code = self.data_frame["ebird_code"][idx]
-        filename = self.data_frame["filename"][idx]
-
-        # generate file path
-        audio_filepath = self.data_dir / ebird_code / filename
-
+    def get_audio_data(self, audio_filepath):
         y, sr = sf.read(audio_filepath)
 
         length = y.shape[0]
@@ -80,6 +68,33 @@ class Bird_Song_Dataset(Dataset):
             y = y[start:start + effective_length].astype(np.float32)
         else:
             y = y.astype(np.float32)
+        
+        return y, sr
+
+    def mix_audio_data(self, y, mix_idx_list):
+        for idx in mix_idx_list:
+            pass
+
+    def __len__(self):
+        return len(self.data_frame)
+
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+
+        # get basic data path
+        ebird_code = self.data_frame["ebird_code"][idx]
+        filename = self.data_frame["filename"][idx]
+
+        # generate file path
+        audio_filepath = self.data_dir / ebird_code / filename
+
+        # original
+        y, sr = self.get_audio_data(audio_filepath)
+
+        # mix
+        if self.multi_label:
+            y, sr = self.mix_audio_data(y, self.data_frame.at[idx, "mix"])
 
         # Adding noise
         if self.noise and self.mode == "train":

@@ -9,8 +9,8 @@ train:
   # grad_accum: 2
 
 val:
-  freq: 5
-  batch: 200
+  freq: 1
+  batch: 100
   workers: 4
 
 train_data:
@@ -50,4 +50,4 @@ scheduler:
     eta_min: 0
 
 loss:
-  name: binary-cross-entropy
+  name: binary-cross-entropy-non-logit

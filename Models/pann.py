@@ -187,7 +187,7 @@ class Cnn14_DecisionLevelAtt(nn.Module):
         self.conv_block6 = ConvBlock(in_channels=1024, out_channels=2048)
 
         self.fc1 = nn.Linear(2048, 2048, bias=True)
-        self.att_block = AttBlock(2048, classes_num, activation='linear')
+        self.att_block = AttBlock(2048, classes_num, activation='sigmoid')
 
         self.init_weight()
 
