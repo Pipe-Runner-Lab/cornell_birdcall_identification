@@ -97,6 +97,14 @@ def get(config=None):
                 param.requires_grad = False
         num_ftrs = model._fc.in_features
         model._fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
+    elif name == 'efficientnet-b1':
+        model = EfficientNet.from_pretrained('efficientnet-b1')
+        if tune_type == 'FE':
+            for param in model.parameters():
+                param.requires_grad = False
+        model._avg_pooling = nn.AdaptiveMaxPool2d(1) 
+        num_ftrs = model._fc.in_features
+        model._fc = get_default_fc(num_ftrs, adjusted_classes, config.model.params)
     elif name == 'efficientnet-b5':
         model = EfficientNet.from_pretrained('efficientnet-b5')
         if tune_type == 'FE':

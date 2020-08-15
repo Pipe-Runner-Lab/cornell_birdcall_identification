@@ -32,9 +32,9 @@ def get(config=None, mode=None, transformer=None):
             data_path,
             transformer,
             fold,
-            noise=False,
+            noise=True,
             mel_spec=True,
-            multi_label=True
+            multi_label=False
         )
     else:
         raise Exception("dataset not in list!")

@@ -1,6 +1,6 @@
 import torch
 from torch.nn.functional import (softmax)
-from sklearn.metrics import (roc_auc_score, confusion_matrix, f1_score)
+from sklearn.metrics import (roc_auc_score, confusion_matrix, f1_score, average_precision_score)
 import matplotlib.pyplot as plt
 import seaborn as sn
 import numpy as np
@@ -9,8 +9,8 @@ import numpy as np
 def post_process_output(output):
     # implementation based on problem statement
     THRESHOLD = 0.8
-    # intermediate = torch.sigmoid(output) > THRESHOLD
-    intermediate = output > THRESHOLD
+    intermediate = torch.sigmoid(output) > THRESHOLD
+    # intermediate = output > THRESHOLD
     
     return intermediate.float()
 
@@ -31,23 +31,24 @@ def onehot_converter(V, classes):
 
     return OHV
 
-
-# def acc(output_list, target_list):
-#     output_list = post_process_output(output_list)
-#     I = torch.logical_and(target_list, output_list)
-#     U = torch.logical_or(target_list, output_list)
-#     batch_iou = torch.sum(I, dim=1, dtype=torch.float)/torch.sum(U, dim=1)
-#     acc = torch.sum(batch_iou) / len(batch_iou)
-#     return acc.item()
+def mAP(output_list, target_list):
+    output_list = torch.sigmoid(output_list)
+    AP_score = average_precision_score(
+        target_list.numpy(),
+        output_list.numpy(),
+        average=None
+    )
+    mAP_score = AP_score.mean()
+    return mAP_score
 
 def acc(output_list, target_list):
     acc = torch.argmax(target_list, dim=1).eq(torch.argmax(post_process_output(output_list), dim=1))
     return 1.0 * torch.sum(acc.int()).item() / output_list.size()[0]
 
 
-def f1(output_list, target_list, threshold=0.5):
-    # output_list = torch.sigmoid(output_list) > threshold
-    output_list = output_list > threshold
+def f1(output_list, target_list, threshold=0.8):
+    output_list = torch.sigmoid(output_list) > threshold
+    # output_list = output_list > threshold
 
     output_list = output_list.float().numpy()
     target_list = target_list.float().numpy()

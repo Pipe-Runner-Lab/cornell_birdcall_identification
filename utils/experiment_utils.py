@@ -23,7 +23,8 @@ class ExperimentHelper:
         self.best_scores = {
             "val/loss": float('inf'),
             "val/f1": 0,
-            "val/acc": 0
+            "val/acc": 0,
+            "val/mAP": 0
         }
 
         if config.checkpoint.type != "RSM":
@@ -83,20 +84,20 @@ class ExperimentHelper:
         #     )
 
         # storing f1 for check
-        if self.best_scores["val/f1"] <= result_dict["val/f1"]:
-            self.best_scores["val/f1"] = result_dict["val/f1"]
-            torch.save(
-                weights_dict,
-                path.join(RESULTS_ROOT_DIR, self.session_name, 'f1_wt.pth')
-            )
+        # if self.best_scores["val/f1"] <= result_dict["val/f1"]:
+        #     self.best_scores["val/f1"] = result_dict["val/f1"]
+        #     torch.save(
+        #         weights_dict,
+        #         path.join(RESULTS_ROOT_DIR, self.session_name, 'f1_wt.pth')
+        #     )
 
         # storing acc for check
-        if self.best_scores["val/acc"] <= result_dict["val/acc"]:
-            self.best_scores["val/acc"] = result_dict["val/acc"]
-            torch.save(
-                weights_dict,
-                path.join(RESULTS_ROOT_DIR, self.session_name, 'acc_wt.pth')
-            )
+        # if self.best_scores["val/acc"] <= result_dict["val/acc"]:
+        #     self.best_scores["val/acc"] = result_dict["val/acc"]
+        #     torch.save(
+        #         weights_dict,
+        #         path.join(RESULTS_ROOT_DIR, self.session_name, 'acc_wt.pth')
+        #     )
 
     def validate(self, train_log_dict, val_log_dict, epoch, weights_dict):
         result_dict = {}
@@ -136,6 +137,16 @@ class ExperimentHelper:
             train_target_list
         )
         result_dict["val/f1"] = metric.f1(
+            val_output_list,
+            val_target_list
+        )
+
+        # generate mAP score
+        result_dict["train/mAP"] = metric.mAP(
+            train_output_list,
+            train_target_list
+        )
+        result_dict["val/mAP"] = metric.mAP(
             val_output_list,
             val_target_list
         )

@@ -83,11 +83,7 @@ class Bird_Song_Dataset(Dataset):
         mix_idx_list = random.choices(ast.literal_eval(
             mix_idx_list), weights=(25, 25, 25, 25), k=k)
 
-        print(mix_idx_list)
-
         for mix_idx in mix_idx_list:
-            print(mix_idx)
-
             ebird_code = self.data_frame["ebird_code"][mix_idx]
             filename = self.data_frame["filename"][mix_idx]
             audio_filepath = self.data_dir / ebird_code / filename
@@ -147,15 +143,12 @@ class Bird_Song_Dataset(Dataset):
 
         # Adding noise
         if self.noise and self.mode == "train":
-            y, sr = self.mix_noise_data(y, 0.4)
+            y, sr = self.mix_noise_data(y, 0.5)
 
         # converting to one hotvector
         label = np.zeros(len(BIRD_CODE), dtype="f")
         for ebird_code in ebird_codes:
             label[BIRD_CODE[ebird_code]] = 1
-
-        print(label)
-        librosa.output.write_wav('test.wav', y, sr)
 
         if self.mel_spec:
             melspec = librosa.feature.melspectrogram(y, sr=sr, **MEL_PARAMS)
