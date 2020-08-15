@@ -6,9 +6,12 @@ import librosa
 import soundfile as sf
 from skimage import io
 from pathlib import Path
+import random
+from os import listdir
+import ast
 
 from torch.utils.data import Dataset
-from Datasets.utils import add_noise
+
 from Datasets.utils import scale_minmax
 from utils.submission_utils import BIRD_CODE
 
@@ -33,8 +36,9 @@ class Bird_Song_Dataset(Dataset):
                 "{} not available for {}".format(mode, DATASET_NAME))
         self.fold_number = fold_number
         self.transformer = transformer
-        self.csv_path = data_path / ("train.csv")
+        self.csv_path = data_path / "train.csv"
         self.data_dir = data_path / "audio"
+        self.noise_dir = data_path / "noise"
         self.noise = noise
         self.mel_spec = mel_spec
         self.multi_label = multi_label
@@ -52,9 +56,7 @@ class Bird_Song_Dataset(Dataset):
     def get_csv_path(self):
         return self.csv_path
 
-    def get_audio_data(self, audio_filepath):
-        y, sr = sf.read(audio_filepath)
-
+    def trim_audio_data(self, y, sr):
         length = y.shape[0]
         effective_length = sr * 5
 
@@ -68,12 +70,58 @@ class Bird_Song_Dataset(Dataset):
             y = y[start:start + effective_length].astype(np.float32)
         else:
             y = y.astype(np.float32)
-        
+
         return y, sr
 
-    def mix_audio_data(self, y, mix_idx_list):
-        for idx in mix_idx_list:
-            pass
+    def get_audio_data(self, audio_filepath):
+        y, sr = sf.read(audio_filepath)
+        y, sr = self.trim_audio_data(y, sr)
+        return y, sr
+
+    def mix_audio_data(self, y, sr, mix_idx_list, ebird_codes, coeff=0.6, k=2):
+        # select idx from list
+        mix_idx_list = random.choices(ast.literal_eval(
+            mix_idx_list), weights=(25, 25, 25, 25), k=k)
+
+        print(mix_idx_list)
+
+        for mix_idx in mix_idx_list:
+            print(mix_idx)
+
+            ebird_code = self.data_frame["ebird_code"][mix_idx]
+            filename = self.data_frame["filename"][mix_idx]
+            audio_filepath = self.data_dir / ebird_code / filename
+
+            m_y, m_sr = self.get_audio_data(audio_filepath)
+            m_y, m_sr = self.trim_audio_data(m_y, m_sr)
+
+            noise_energy = np.sqrt(m_y.dot(m_y))
+            audio_energy = np.sqrt(y.dot(y))
+
+            y += coeff * m_y * (audio_energy / noise_energy)
+
+            ebird_codes.append(ebird_code)
+
+        return y, sr, ebird_codes
+
+    def mix_noise_data(self, y, coeff):
+        """Adds noise to provided audio clip
+
+        Args:
+            y: audio file wihtout noise
+            coeff: coeff is the proportion of noise to be added
+        """
+        noise_file_path = random.choice(listdir(self.noise_dir))
+        noise_file_path = self.noise_dir / noise_file_path
+
+        n_y, n_sr = self.get_audio_data(noise_file_path)
+        n_y, n_sr = self.trim_audio_data(n_y, n_sr)
+
+        noise_energy = np.sqrt(n_y.dot(n_y))
+        audio_energy = np.sqrt(y.dot(y))
+
+        y += coeff * n_y * (audio_energy / noise_energy)
+        return y, n_sr
 
     def __len__(self):
         return len(self.data_frame)
@@ -83,26 +131,31 @@ class Bird_Song_Dataset(Dataset):
             idx = idx.tolist()
 
         # get basic data path
-        ebird_code = self.data_frame["ebird_code"][idx]
+        ebird_codes = [self.data_frame["ebird_code"][idx]]
         filename = self.data_frame["filename"][idx]
 
         # generate file path
-        audio_filepath = self.data_dir / ebird_code / filename
+        audio_filepath = self.data_dir / ebird_codes[0] / filename
 
         # original
         y, sr = self.get_audio_data(audio_filepath)
 
         # mix
-        if self.multi_label:
-            y, sr = self.mix_audio_data(y, self.data_frame.at[idx, "mix"])
+        if self.multi_label and self.mode == "train":
+            y, sr, ebird_codes = self.mix_audio_data(
+                y, sr, self.data_frame.at[idx, "mix"], ebird_codes)
 
         # Adding noise
         if self.noise and self.mode == "train":
-            y, sr = add_noise(y, 0.7)
+            y, sr = self.mix_noise_data(y, 0.4)
 
         # converting to one hotvector
         label = np.zeros(len(BIRD_CODE), dtype="f")
-        label[BIRD_CODE[ebird_code]] = 1
+        for ebird_code in ebird_codes:
+            label[BIRD_CODE[ebird_code]] = 1
+
+        print(label)
+        librosa.output.write_wav('test.wav', y, sr)
 
         if self.mel_spec:
             melspec = librosa.feature.melspectrogram(y, sr=sr, **MEL_PARAMS)
