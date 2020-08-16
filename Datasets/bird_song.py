@@ -100,7 +100,7 @@ class Bird_Song_Dataset(Dataset):
 
         return y, sr, ebird_codes
 
-    def mix_noise_data(self, y, coeff):
+    def mix_background_data(self, y, coeff):
         """Adds noise to provided audio clip
 
         Args:
@@ -118,6 +118,19 @@ class Bird_Song_Dataset(Dataset):
 
         y += coeff * n_y * (audio_energy / noise_energy)
         return y, n_sr
+
+    def add_noise(self,y,SNR_db=10):
+        # SNR in db  SNR = 10*log10 Pdata/PNoise
+        # https://stackoverflow.com/questions/14058340/adding-noise-to-a-signal-in-python
+        # We can experiment with SNR_db 
+        audio_watts=y**2
+        sig_avg_watts = np.mean(audio_watts)
+        sig_avg_db = 10 * np.log10(sig_avg_watts)
+        noise_avg_db = sig_avg_db - SNR_db
+        noise_avg_watts = 10 ** (noise_avg_db / 10)
+        noise_volts = np.random.normal(0, np.sqrt(noise_avg_watts), len(audio_watts))
+        y_volts = y + noise_volts
+        return y_volts
 
     def __len__(self):
         return len(self.data_frame)
@@ -143,7 +156,8 @@ class Bird_Song_Dataset(Dataset):
 
         # Adding noise
         if self.noise and self.mode == "train":
-            y, sr = self.mix_noise_data(y, 0.5)
+            y=self.add_noise(y)
+            y, sr = self.mix_background_data(y, 0.5)
 
         # converting to one hotvector
         label = np.zeros(len(BIRD_CODE), dtype="f")
