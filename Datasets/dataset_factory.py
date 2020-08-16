@@ -31,8 +31,7 @@ def get(config=None, mode=None, transformer=None):
             mode,
             data_path,
             transformer,
-            fold,
-            noise=True,
+            fold_number=fold,
             mel_spec=True,
             multi_label=False
         )
@@ -46,6 +45,9 @@ def get(config=None, mode=None, transformer=None):
     ))
     print("↳ [ Image Transformer : {} ]".format(
         str(transformer["image"])
+    ))
+    print("↳ [ Wave Transformer : {} ]".format(
+        str(transformer["wave"])
     ))
 
     return dataset

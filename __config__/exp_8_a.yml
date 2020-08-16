@@ -17,7 +17,7 @@ train_data:
   name: bird_song
   params:
     transformer: DFLT
-    audio_transformer: DFLT
+    wave_transformer: DFLT
     resize: 240x445 
     fold: 0
 
@@ -25,7 +25,7 @@ val_data:
   name: bird_song
   params:
     transformer: DFLT
-    audio_transformer: DFLT
+    wave_transformer: DFLT
     resize: 240x445 
     fold: 0
 

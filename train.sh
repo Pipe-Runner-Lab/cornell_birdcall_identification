@@ -54,4 +54,4 @@ GPU_IDX=0
 # CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_7_a.yml" --dev
 
 # Enet larger batches
-CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_8_a.yml" --dev -p
+CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_8_a.yml" --dev

@@ -92,7 +92,7 @@ def _get_default_config(mode):
         config.train_data.params = edict()
         config.train_data.params.fold = None
         config.train_data.params.transformer = "DFLT"
-        config.train_data.params.audio_transformer = "DFLT"
+        config.train_data.params.wave_transformer = "DFLT"
         config.train_data.params.resize = None
 
         # val_data
@@ -102,7 +102,7 @@ def _get_default_config(mode):
         config.val_data.params = edict()
         config.val_data.params.fold = None
         config.val_data.params.transformer = "DFLT"
-        config.val_data.params.audio_transformer = "DFLT"
+        config.val_data.params.wave_transformer = "DFLT"
         config.val_data.params.resize = None
 
 

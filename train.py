@@ -15,6 +15,7 @@ from Optimisers import optimiser_factory
 from Losses import loss_factory
 from Schedulers import scheduler_factory
 from Transformers import transformer_factory
+from WaveTransformers import wave_transformer_factory
 from Datasets import dataset_factory
 
 
@@ -233,11 +234,11 @@ def run(config):
     transformers = {
         "TRA": {
             "image": transformer_factory.get(config.train_data.params),
-            "audio": None
+            "wave": wave_transformer_factory.get(config.train_data.params)
         },
         "VAL": {
             "image": transformer_factory.get(config.val_data.params),
-            "audio": None
+            "wave": None
         }
     }
 

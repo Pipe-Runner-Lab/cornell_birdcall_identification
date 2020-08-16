@@ -7,13 +7,13 @@ import soundfile as sf
 from skimage import io
 from pathlib import Path
 import random
-from os import listdir
 import ast
 
 from torch.utils.data import Dataset
 
 from Datasets.utils import scale_minmax
 from utils.submission_utils import BIRD_CODE
+from WaveTransformers.utils import (trim_audio_data, get_audio_data)
 
 NUMBER_OF_FOLDS = 5
 DATASET_NAME = 'bird_song'
@@ -22,7 +22,7 @@ MEL_PARAMS = {'n_mels': 128, 'fmin': 20, 'fmax': 16000}
 
 
 class Bird_Song_Dataset(Dataset):
-    def __init__(self, mode, data_path, transformer=None, fold_number=0, noise=False, mel_spec=True, multi_label=False):
+    def __init__(self, mode, data_path, transformer=None, fold_number=0, mel_spec=True, multi_label=False):
         if transformer is None:
             raise Exception("transformer missing!")
         if fold_number is None or fold_number >= NUMBER_OF_FOLDS:
@@ -36,10 +36,10 @@ class Bird_Song_Dataset(Dataset):
                 "{} not available for {}".format(mode, DATASET_NAME))
         self.fold_number = fold_number
         self.transformer = transformer
+
         self.csv_path = data_path / "train.csv"
         self.data_dir = data_path / "audio"
-        self.noise_dir = data_path / "noise"
-        self.noise = noise
+
         self.mel_spec = mel_spec
         self.multi_label = multi_label
 
@@ -56,28 +56,6 @@ class Bird_Song_Dataset(Dataset):
     def get_csv_path(self):
         return self.csv_path
 
-    def trim_audio_data(self, y, sr):
-        length = y.shape[0]
-        effective_length = sr * 5
-
-        if length < effective_length:
-            new_y = np.zeros(effective_length, dtype=y.dtype)
-            start = np.random.randint(effective_length - length)
-            new_y[start:start + length] = y
-            y = new_y.astype(np.float32)
-        elif length > effective_length:
-            start = np.random.randint(length - effective_length)
-            y = y[start:start + effective_length].astype(np.float32)
-        else:
-            y = y.astype(np.float32)
-
-        return y, sr
-
-    def get_audio_data(self, audio_filepath):
-        y, sr = sf.read(audio_filepath)
-        y, sr = self.trim_audio_data(y, sr)
-        return y, sr
-
     def mix_audio_data(self, y, sr, mix_idx_list, ebird_codes, coeff=0.6, k=2):
         # select idx from list
         mix_idx_list = random.choices(ast.literal_eval(
@@ -88,8 +66,7 @@ class Bird_Song_Dataset(Dataset):
             filename = self.data_frame["filename"][mix_idx]
             audio_filepath = self.data_dir / ebird_code / filename
 
-            m_y, m_sr = self.get_audio_data(audio_filepath)
-            m_y, m_sr = self.trim_audio_data(m_y, m_sr)
+            m_y, m_sr = get_audio_data(audio_filepath)
 
             noise_energy = np.sqrt(m_y.dot(m_y))
             audio_energy = np.sqrt(y.dot(y))
@@ -99,38 +76,6 @@ class Bird_Song_Dataset(Dataset):
             ebird_codes.append(ebird_code)
 
         return y, sr, ebird_codes
-
-    def mix_background_data(self, y, coeff):
-        """Adds noise to provided audio clip
-
-        Args:
-            y: audio file wihtout noise
-            coeff: coeff is the proportion of noise to be added
-        """
-        noise_file_path = random.choice(listdir(self.noise_dir))
-        noise_file_path = self.noise_dir / noise_file_path
-
-        n_y, n_sr = self.get_audio_data(noise_file_path)
-        n_y, n_sr = self.trim_audio_data(n_y, n_sr)
-
-        noise_energy = np.sqrt(n_y.dot(n_y))
-        audio_energy = np.sqrt(y.dot(y))
-
-        y += coeff * n_y * (audio_energy / noise_energy)
-        return y, n_sr
-
-    def add_noise(self,y,SNR_db=10):
-        # SNR in db  SNR = 10*log10 Pdata/PNoise
-        # https://stackoverflow.com/questions/14058340/adding-noise-to-a-signal-in-python
-        # We can experiment with SNR_db 
-        audio_watts=y**2
-        sig_avg_watts = np.mean(audio_watts)
-        sig_avg_db = 10 * np.log10(sig_avg_watts)
-        noise_avg_db = sig_avg_db - SNR_db
-        noise_avg_watts = 10 ** (noise_avg_db / 10)
-        noise_volts = np.random.normal(0, np.sqrt(noise_avg_watts), len(audio_watts))
-        y_volts = y + noise_volts
-        return y_volts
 
     def __len__(self):
         return len(self.data_frame)
@@ -147,17 +92,19 @@ class Bird_Song_Dataset(Dataset):
         audio_filepath = self.data_dir / ebird_codes[0] / filename
 
         # original
-        y, sr = self.get_audio_data(audio_filepath)
+        y, sr = get_audio_data(audio_filepath, max_length=5)
 
-        # mix
+        # multi-label mix
         if self.multi_label and self.mode == "train":
             y, sr, ebird_codes = self.mix_audio_data(
                 y, sr, self.data_frame.at[idx, "mix"], ebird_codes)
 
-        # Adding noise
-        if self.noise and self.mode == "train":
-            y=self.add_noise(y)
-            y, sr = self.mix_background_data(y, 0.5)
+        # wave transformation
+        if self.transformer["wave"]:
+            y, sr = self.transformer["wave"](y, sr)
+
+        # Check
+        # librosa.output.write_wav('audio_test.wav', y, sr)
 
         # converting to one hotvector
         label = np.zeros(len(BIRD_CODE), dtype="f")
@@ -172,6 +119,7 @@ class Bird_Song_Dataset(Dataset):
             image = 255 - image
             image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
+            # spec Image transformation
             return self.transformer["image"](image), label
         else:
             y = torch.from_numpy(y)
