@@ -104,7 +104,7 @@ class Bird_Song_Dataset(Dataset):
             y, sr = self.transformer["wave"](y, sr)
 
         # Check
-        # librosa.output.write_wav('audio_test.wav', y, sr)
+        librosa.output.write_wav('audio_test.wav', y, sr)
 
         # converting to one hotvector
         label = np.zeros(len(BIRD_CODE), dtype="f")

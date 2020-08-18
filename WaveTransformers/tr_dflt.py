@@ -6,8 +6,8 @@ class DefaultTransformer:
         pass
 
     def __call__(self, y, sr):
-        # y, sr = mix_background_noise(y, sr, 0.5)
-        y, sr = mix_awg_noise(y, sr, SNR_db=10)
+        y, sr = mix_background_noise(y, sr, 0.6)
+        # y, sr = mix_awg_noise(y, sr, SNR_db=15)
         return y, sr
 
     def __str__(self):
