@@ -4,12 +4,12 @@ classes: 264
 
 train:
   epochs: 70
-  batch: 20
+  batch: 42
   workers: 4
   # grad_accum: 2
 
 val:
-  freq: 1
+  freq: 5
   batch: 100
   workers: 4
 
