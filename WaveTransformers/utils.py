@@ -13,7 +13,7 @@ def get_audio_data(audio_filepath, max_length=5):
     y, sr = sf.read(audio_filepath)
     y, sr = trim_audio_data(y, sr, max_length=5)
     return y, sr
-
+   
 
 def trim_audio_data(y, sr, max_length=5):
     length = y.shape[0]
@@ -48,7 +48,7 @@ def mix_background_noise(y, sr, coeff):
     noise_energy = np.sqrt(n_y.dot(n_y))
     audio_energy = np.sqrt(y.dot(y))
 
-    y += coeff * n_y * (audio_energy / noise_energy)
+    y = y +   (coeff * n_y * (audio_energy / noise_energy))
     return y, sr
 
 
