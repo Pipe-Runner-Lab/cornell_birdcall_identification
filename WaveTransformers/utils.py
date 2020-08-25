@@ -48,7 +48,7 @@ def mix_background_noise(y, sr, coeff):
     noise_energy = np.sqrt(n_y.dot(n_y))
     audio_energy = np.sqrt(y.dot(y))
 
-    y += coeff * n_y * (audio_energy / noise_energy)
+    y = y + coeff * n_y * (audio_energy / noise_energy)
     return y, sr
 
 
