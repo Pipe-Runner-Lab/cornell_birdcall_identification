@@ -57,8 +57,10 @@ def mix_awg_noise(y, sr, SNR_db=10):
     # https://stackoverflow.com/questions/14058340/adding-noise-to-a-signal-in-python
     # We can experiment with SNR_db
     audio_watts = y**2
+    
     sig_avg_watts = np.mean(audio_watts)
-    sig_avg_db = 10 * np.log10(sig_avg_watts)
+    epsilon = 10**-6
+    sig_avg_db = 10 * np.log10(sig_avg_watts+epsilon)
     noise_avg_db = sig_avg_db - SNR_db
     noise_avg_watts = 10 ** (noise_avg_db / 10)
     noise_volts = np.random.normal(

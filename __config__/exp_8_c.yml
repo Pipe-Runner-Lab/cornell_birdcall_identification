@@ -1,0 +1,52 @@
+mode: TRA
+seed: 1024
+classes: 264
+
+train:
+  epochs: 100
+  batch: 48
+  workers: 4
+
+val:
+  freq: 10
+  batch: 100
+  workers: 4
+
+train_data:
+  name: bird_song
+  params:
+    transformer: DFLT
+    wave_transformer: DFLT
+    resize: 240x300 
+    fold: 0
+
+val_data:
+  name: bird_song
+  params:
+    transformer: DFLT
+    wave_transformer: DFLT
+    resize: 240x300
+    fold: 0
+
+model:
+  name: efficientnet-b1
+  params:
+    pred_type: CLS
+    tune_type: FT
+    fc_drop_out_0: 0.2
+    fc_drop_out_1: 0.2
+
+optimiser:
+  name: Adam
+  params:
+    lr: 0.001
+    # weight_decay: 0.001
+
+scheduler:
+  name: CosineAnnealing
+  params:
+    T_max: 50
+    eta_min: 0
+
+loss:
+  name: binary-cross-entropy
