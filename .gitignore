@@ -139,3 +139,6 @@ dmypy.json
 /__runs__
 /__runs__
 /.vscode
+/wandb
+/__results__
+

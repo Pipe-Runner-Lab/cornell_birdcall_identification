@@ -307,7 +307,7 @@ def run(config):
         print("[ Mixed Precision ]")
         model, optimiser = amp.initialize(
             model, optimiser,
-            opt_level="O1",
+            opt_level="O2",
             # keep_batchnorm_fp32=True,
         )
 

@@ -44,7 +44,7 @@ GPU_IDX=0
 # CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_4_a.yml" --dev
 # CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_4_b.yml" --dev
 # CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_4_c.yml" --dev
-# CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_5_b.yml" --dev -p
+# CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_5_a.yml" --dev -p
 # CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_5_c.yml" --dev -p
 
 # Noise experiments
@@ -54,4 +54,7 @@ GPU_IDX=0
 # CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_7_a.yml" --dev
 
 # Enet larger batches
-CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_8_a.yml" --dev -mp
+#CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_8_b.yml" --dev -p
+
+#half precision experiments
+CUDA_VISIBLE_DEVICES=$GPU_IDX python3 main.py --config="exp_8_d.yml" --dev -mp -p
