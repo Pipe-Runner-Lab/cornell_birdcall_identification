@@ -2,6 +2,8 @@ import soundfile as sf
 from os import listdir
 import numpy as np
 import random
+import cv2
+import librosa
 from pathlib import Path
 
 from utils.paths import NOISE_ROOT_DIR
@@ -65,3 +67,68 @@ def mix_awg_noise(y, sr, SNR_db=10):
         0, np.sqrt(noise_avg_watts), len(audio_watts))
     y_volts = y + noise_volts
     return y_volts, sr
+
+
+def time_shift(y, sr):
+    start_ = int(np.random.uniform(-80000, 80000))
+    if start_ >= 0:
+        y_new = np.r_[y[start_:], np.random.uniform(-0.001, 0.001, start_)]
+    else:
+        y_new = np.r_[np.random.uniform(-0.001, 0.001, -start_), y[:start_]]
+
+    return y_new, sr
+
+
+def speed_tune(y, sr, speed_rate=None):
+    if not speed_rate:
+        speed_rate = np.random.uniform(0.6, 1.3)
+
+    y_new = cv2.resize(y, (1, int(len(y) * speed_rate))).squeeze()
+    if len(y_new) < len(y):
+        pad_len = len(y) - len(y_new)
+        y_new = np.r_[np.random.uniform(-0.001, 0.001, int(pad_len/2)),
+                      y_new,
+                      np.random.uniform(-0.001, 0.001, int(np.ceil(pad_len/2)))]
+    else:
+        cut_len = len(y_new) - len(y)
+        y_new = y_new[int(cut_len/2):int(cut_len/2)+len(y)]
+
+    return y_new, sr
+
+
+def stretch_audio(y, sr, rate=None):
+    if not rate:
+        rate = np.random.uniform(0.5, 1.5)
+
+    input_length = len(y)
+
+    y = librosa.effects.time_stretch(y, rate)
+
+    if len(y) > input_length:
+        y = y[:input_length]
+    else:
+        y = np.pad(y, (0, max(0, input_length - len(y))), "constant")
+
+    return y, sr
+
+
+def pitch_shift(y, sr, n_steps=None):
+    return librosa.effects.pitch_shift(y, sr=sr, n_steps=n_steps), sr
+
+
+def add_gaussian_noise(y, sr):
+    noise = np.random.randn(len(y))
+    y_new = y + 0.005*noise
+    return y_new, sr
+
+def polarity_inversion(y, sr):
+    return -y, sr
+
+
+def amp_gain(y, sr, min_gain_in_db=-12, max_gain_in_db=12):
+    assert min_gain_in_db <= max_gain_in_db
+    min_gain_in_db = min_gain_in_db
+    max_gain_in_db = max_gain_in_db
+
+    amplitude_ratio = 10**(random.uniform(min_gain_in_db, max_gain_in_db)/20)
+    return y * amplitude_ratio, sr
