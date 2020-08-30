@@ -11,10 +11,18 @@ from utils.paths import NOISE_ROOT_DIR
 noise_dir = Path(NOISE_ROOT_DIR) / "random"
 
 
-def prob_wrapper(p=0.5):
-    if random.random() <= p:
-        return True
-    return False
+def prob_wrapper(func):
+    def exec_with_pro(y, sr, p=0.5, **kwargs):
+        if random.random() <= p:
+            return func(y, sr, **kwargs)
+        return y, sr
+
+    return exec_with_pro
+
+
+# ======================================================================================
+#                              Wave Modifier Functions
+# ======================================================================================
 
 
 def get_audio_data(audio_filepath, max_length=5):
@@ -41,15 +49,14 @@ def trim_audio_data(y, sr, max_length=5):
     return y, sr
 
 
-def mix_background_noise(y, sr, coeff):
+@prob_wrapper
+def mix_background_noise(y, sr, coeff=0.6):
     """Adds noise to provided audio clip
 
     Args:
         y: audio file wihtout noise
         coeff: coeff is the proportion of noise to be added
     """
-    if not prob_wrapper():
-        return y, sr
 
     noise_file_path = random.choice(listdir(noise_dir))
     noise_file_path = noise_dir / noise_file_path
@@ -63,14 +70,11 @@ def mix_background_noise(y, sr, coeff):
     return y, sr
 
 
+@prob_wrapper
 def mix_awg_noise(y, sr, SNR_db=10):
     # SNR in db  SNR = 10*log10 Pdata/PNoise
     # https://stackoverflow.com/questions/14058340/adding-noise-to-a-signal-in-python
     # We can experiment with SNR_db
-
-    if not prob_wrapper():
-        return y, sr
-
     audio_watts = y**2
     sig_avg_watts = np.mean(audio_watts)
     sig_avg_db = 10 * np.log10(sig_avg_watts)
@@ -82,10 +86,8 @@ def mix_awg_noise(y, sr, SNR_db=10):
     return y_volts, sr
 
 
+@prob_wrapper
 def time_shift(y, sr):
-    if not prob_wrapper():
-        return y, sr
-
     start_ = int(np.random.uniform(-80000, 80000))
     if start_ >= 0:
         y_new = np.r_[y[start_:], np.random.uniform(-0.001, 0.001, start_)]
@@ -95,10 +97,8 @@ def time_shift(y, sr):
     return y_new, sr
 
 
+@prob_wrapper
 def speed_tune(y, sr, speed_rate=None):
-    if not prob_wrapper():
-        return y, sr
-
     if not speed_rate:
         speed_rate = np.random.uniform(0.6, 1.3)
 
@@ -115,10 +115,8 @@ def speed_tune(y, sr, speed_rate=None):
     return y_new, sr
 
 
+@prob_wrapper
 def stretch_audio(y, sr, rate=None):
-    if not prob_wrapper():
-        return y, sr
-
     if not rate:
         rate = np.random.uniform(0.5, 1.5)
 
@@ -134,32 +132,25 @@ def stretch_audio(y, sr, rate=None):
     return y, sr
 
 
+@prob_wrapper
 def pitch_shift(y, sr, n_steps=None):
-    if not prob_wrapper():
-        return y, sr
-
     return librosa.effects.pitch_shift(y, sr=sr, n_steps=n_steps), sr
 
 
+@prob_wrapper
 def add_gaussian_noise(y, sr):
-    if not prob_wrapper():
-        return y, sr
-
     noise = np.random.randn(len(y))
     y_new = y + 0.005*noise
     return y_new, sr
 
-def polarity_inversion(y, sr):
-    if not prob_wrapper():
-        return y, sr
 
+@prob_wrapper
+def polarity_inversion(y, sr):
     return -y, sr
 
 
+@prob_wrapper
 def amp_gain(y, sr, min_gain_in_db=-12, max_gain_in_db=12):
-    if not prob_wrapper():
-        return y, sr
-
     assert min_gain_in_db <= max_gain_in_db
     min_gain_in_db = min_gain_in_db
     max_gain_in_db = max_gain_in_db

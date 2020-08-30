@@ -15,7 +15,7 @@ class DefaultTransformer:
         pass
 
     def __call__(self, y, sr):
-        y, sr = mix_background_noise(y, sr, 0.6)
+        y, sr = mix_background_noise(y, sr, coeff=0.6)
         y, sr = mix_awg_noise(y, sr, SNR_db=15)
         y, sr = time_shift(y, sr)
         y, sr = speed_tune(y, sr)
