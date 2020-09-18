@@ -47,7 +47,7 @@ google-auth==1.18.0
 gql==0.2.0
 graphql-core==1.1
 grpcio==1.30.0
-httplib2==0.14.0
+httplib2==0.18.0
 idna==2.8
 imageio==2.9.0
 imgaug==0.4.0
