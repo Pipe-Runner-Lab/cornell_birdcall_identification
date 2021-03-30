@@ -125,7 +125,7 @@ pycodestyle==2.6.0
 pycparser==2.20
 pycups==1.9.73
 pygetwindow==0.0.8
-pygments==2.6.1
+pygments==2.7.4
 pygobject==3.36.0
 pyjwt==1.7.1
 pylint==2.5.3
