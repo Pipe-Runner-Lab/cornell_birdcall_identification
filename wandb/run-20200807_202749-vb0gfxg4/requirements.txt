@@ -108,7 +108,7 @@ pathtools==0.1.2
 pexpect==4.6.0
 pickleshare==0.7.5
 pillow==7.0.0
-pip==20.0.2
+pip==21.1
 pretrainedmodels==0.7.4
 prometheus-client==0.8.0
 promise==2.3
