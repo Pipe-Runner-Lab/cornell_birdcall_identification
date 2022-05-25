@@ -126,7 +126,7 @@ pycups==1.9.73
 pygetwindow==0.0.8
 pygments==2.6.1
 pygobject==3.36.0
-pyjwt==1.7.1
+pyjwt==2.4.0
 pylint==2.5.3
 pymacaroons==0.13.0
 pymsgbox==1.0.8
