@@ -94,7 +94,7 @@ networkx==2.4
 notebook==6.0.3
 notify2==0.3
 numba==0.48.0
-numpy==1.19.0
+numpy==1.22.0
 nvidia-ml-py3==7.352.0
 oauthlib==3.1.0
 olefile==0.46
