@@ -169,7 +169,7 @@ send2trash==1.5.0
 sentencepiece==0.1.91
 sentry-sdk==0.16.1
 setproctitle==1.1.10
-setuptools==45.2.0
+setuptools==65.5.1
 shapely==1.7.0
 shortuuid==1.0.1
 simplejson==3.16.0
